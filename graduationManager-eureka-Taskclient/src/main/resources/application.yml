@@ -1,0 +1,21 @@
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:18761/eureka/
+
+mybatis:
+  typeAliasesPackage: com.client.eurekaclient.pojo
+  mapperLocations: classpath:mapper/*.xml
+
+server:
+  port: 18763
+spring:
+  application:
+    name: service-hi2
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/graduation?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password: 123

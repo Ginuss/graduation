@@ -1,0 +1,336 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/WdatePicker.css"/>
+    <link rel="stylesheet" type="text/css" href="css/skin_/table.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery.grid.css"/>
+    <link rel="stylesheet" type="text/css" href="../layui-v2.3.0/layui/css/layui.css"/>
+
+    <title></title>
+</head>
+
+<body>
+<div id="setGrade" style="display: none">
+    <table class="layui-table">
+        <input type="text" name="idtext" style="display: none"/>
+        <tr>
+            <td>开题报告成绩</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" class="layui-input" lay-verify="number"  type='text' name="reportGrade" /></td>
+        </tr>
+        <tr>
+            <td>论文成绩</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type='text'  class="layui-input" name="subjectGrade" lay-verify="number" /></td>
+        </tr>
+        <tr>
+            <td>答辩成绩</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' class="layui-input" name="answerGrade" lay-verify="number"  /></td>
+        </tr>
+    </table>
+    <div style="text-align: center">
+        <input type="button" class="layui-btn layui-btn-primary" value="确认" onclick="submit()"/>
+    </div>
+</div>
+<div id = "container">
+<div id="hd"></div>
+<div id="bd">
+    <div id="main">
+        <div class="search-box ue-clear">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>学生列表</legend>
+                <br>
+
+                <div class="kv-item ue-clear">
+                    <label><span class="impInfo"></span>学生姓名:</label>
+                    <div class="kv-item-content">
+                        <input type="text" style="width: 120px;" name="stuname" placeholder="学生姓名"/>
+                    </div>
+                    <div class="search-button">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input class="button" onclick="seach()" type="button" value="搜索一下"/>
+                    </div>
+                </div>
+            </fieldset>
+
+
+
+            <div class="studentTable" id="student">
+
+                <table id="studenttable" class="layui-table">
+                    <colgroup>
+                        <col width="50">
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>学生姓名</th>
+                        <th>联系方式</th>
+                        <th>所选课题</th>
+                        <th>指导老师</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="studentGrid" class="tbody">
+                    <tr v-for="pre in preview" onclick="click(this)">
+                        <td id="id">{{ pre.uuid }}</td>
+                        <td>{{ pre.name }}</td>
+                        <td>{{ pre.email }}</td>
+                        <td>{{ pre.articlename }}</td>
+                        <td>{{ pre.articleauth }}</td>
+                        <td><a onclick="grade(this)">评分</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div id="pTable" style="width: 1200px;">
+                    <div id="laypage">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+</body>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript" src="js/jquery.select.js"></script>
+<script type="text/javascript" src="js/core.js"></script>
+<script type="text/javascript" src="js/jquery.pagination.js"></script>
+<script type="text/javascript" src="js/jquery.grid.js"></script>
+<script type="text/javascript" src="js/WdatePicker.js"></script>
+<script type="text/javascript" src="../js/jquery.cookie.js"></script>
+<script type="text/javascript" src="../js/application.js"></script>
+<script type="text/javascript" src="../js/vue.js"></script>
+<script type="text/javascript" src="../layui-v2.3.0/layui/layui.js"></script>
+<script type="text/javascript">
+
+
+
+    var student = new Vue({
+        el: '#student',
+        data: {
+            preview: ""
+        }
+    });
+    layui.use('laypage', function () {
+        var laypage = layui.laypage;
+        $.ajax({
+            url:"/getStudentCount",
+            type:"POST",
+            data:{},
+            success:function (res) {
+                debugger;
+                console.log(res);
+                laypage.render({
+                    elem: 'pTable'
+                    , count: res
+                    , limit: 5
+                    , jump: function (obj, first) {
+                        //obj包含了当前分页的所有参数，比如：
+                        //console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                        //  console.log(obj.limit); //得到每页显示的条数
+                        debugger;
+                        var jon={};
+                        jon['curr']=obj.curr;
+                        jon['limit']=obj.limit;
+
+                        $.ajax({
+                            url: "/getStudent",
+                            type: "POST",
+                            data: {"jon": JSON.stringify(jon)},
+                            success: function (res) {
+                                debugger;
+                                //var a = res.replace(/"status":"1"/g, "\"status\":\"已审核\"");
+                                //var b = a.replace(/"status":"0"/g, "\"status\":\"未审核\"");
+                                student.preview = JSON.parse(res);
+                            }
+                        });
+                        //首次不执行
+                        if (1) {
+                            //do something
+                        }
+                    }
+                });
+            },
+            error:function (res) {
+                layer.msg("获取数据时发生错误，请重试!!!");
+                console.log(res);
+            }
+        });
+    });
+
+
+
+
+    function seach() {
+        var jon = {};
+        jon['stuname'] = $("input[name='stuname']").val();
+
+        layui.use('laypage', function () {
+            var laypage = layui.laypage;
+            $.ajax({
+                url:"/searchStudentCount",
+                type:"POST",
+                data:{"jon": JSON.stringify(jon)},
+                success:function (res) {
+                    debugger;
+                    laypage.render({
+                        elem: 'pTable'
+                        , count: res
+                        , limit: 5
+                        , jump: function (obj, first) {
+                            //obj包含了当前分页的所有参数，比如：
+                            //console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                            //  console.log(obj.limit); //得到每页显示的条数
+                            debugger;
+                            jon['curr']=obj.curr;
+                            jon['limit']=obj.limit;
+
+                            $.ajax({
+                                url: "/searchStudent",
+                                type: "POST",
+                                async: false,
+                                data: {"jon": JSON.stringify(jon)},
+                                success: function (res) {
+                                    console.log(res);
+                                    student.preview = JSON.parse(res);
+                                }
+                            });
+                            //首次不执行
+                            if (1) {
+                                //do something
+                            }
+                        }
+                    });
+                },
+                error:function (res) {
+                    layer.msg("获取数据时发生错误，请重试!!!");
+                    console.log(res);
+                }
+            });
+        });
+    }
+
+    function grade(e) {
+        var row = e.parentNode.parentNode.rowIndex;
+        var id = $("#studentGrid tr:eq(" + (row - 1) + ") td:eq(0)").html();
+        var teaname = $("#studentGrid tr:eq(" + (row - 1) + ") td:eq(4)").html();
+        var jon = {};
+        jon['token'] = getCookie('token');
+        $.ajax({
+            url: "/getLogo",
+            type: "POST",
+            data: {"jon": JSON.stringify(jon)},
+            success: function (user) {
+                debugger;
+                var jsonUser = JSON.parse(user);
+                var obj = eval("(" + jsonUser + ")");
+                var currName =obj.name;
+                if(teaname!=currName){
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        layer.msg('您没有权限给该学生评分!!!', {
+                            icon: 2
+                        });
+                    });
+                } else{
+                    var jon ={};
+                    jon['id'] = id;
+                    $.ajax({
+                        url: "/getGradeById",
+                        type: "POST",
+                        data: {"jon":JSON.stringify(jon)},
+                        success: function (res) {
+                            debugger;
+                            if(res=='[]'){
+                                layui.use('layer', function () {
+                                    var layer = layui.layer;
+                                    layer.msg('该学生没有任何答辩信息，请与本人核实后进行评分!!!', {
+                                        icon: 2
+                                    });
+                                });
+                            }
+                            debugger;
+                            var json = eval("("+res+")");
+                            $('input[name="idtext"]').val(id);
+                            $('input[name="reportGrade"]').val(json[0].repedittime);
+                            $('input[name="subjectGrade"]').val(json[0].subedittime);
+                            $('input[name="answerGrade"]').val(json[0].grade);
+
+                            layui.use('layer', function () {
+                                var layer = layui.layer;
+                                layer.open({
+                                    type: 1,
+                                    title: '教师评分',
+                                    closeBtn: 2,
+                                    area: ['400px', '300px'],
+                                    anim: 1,
+                                    shadeClose: true,
+                                    content: $('#setGrade')
+                                });
+                            });
+                        }
+                    });
+
+                }
+            }
+        });
+    }
+
+    function submit() {
+        debugger;
+        var id = $('input[name="idtext"]').val();
+        var reportGrade = $('input[name="reportGrade"]').val();
+        var subjectGrade =  $('input[name="subjectGrade"]').val();
+        var answerGrade = $('input[name="answerGrade"]').val();
+        var jon = {};
+        jon['id'] = id;
+        jon['reportGrade'] = reportGrade;
+        jon['subjectGrade'] = subjectGrade;
+        jon['answerGrade'] = answerGrade;
+        $.ajax({
+            url: "/submitGrade",
+            type: "POST",
+            data: {"jon":JSON.stringify(jon)},
+            success: function (res) {
+                debugger;
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('评分成功!!!', {
+                        icon: 0
+                    });
+                });
+                setTimeout("location.reload()",2000);
+
+            },
+            error: function (res) {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('服务器出了点问题，请重试!!!', {
+                        icon: 2
+                    });
+                });
+            }
+        });
+
+    }
+
+
+
+
+
+</script>
+</html>

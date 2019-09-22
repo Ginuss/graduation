@@ -1,0 +1,473 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/WdatePicker.css"/>
+    <link rel="stylesheet" type="text/css" href="css/skin_/table.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery.grid.css"/>
+    <link rel="stylesheet" type="text/css" href="../layui-v2.3.0/layui/css/layui.css"/>
+
+    <title></title>
+</head>
+
+<body>
+<div id="articleDetail" style="display: none">
+    <table class="layui-table">
+        <tr>
+            <td>id</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type="text" name="idtext" readonly/></td>
+        </tr>
+        <tr>
+            <td>课程名称</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="nametext" readonly/></td>
+        </tr>
+        <tr>
+            <td>课题介绍</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="valuetext" readonly/></td>
+        </tr>
+        <tr>
+            <td>状态</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="statustext" readonly/></td>
+        </tr>
+    </table>
+</div>
+<div id = "container">
+<div id="hd"></div>
+<div id="bd">
+    <div id="main">
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>已选课题</legend>
+            <!--<span class="layedit-tool-active">当前已选课题:</span><br><br>-->
+            <div class="ChooseArticle" id="ChooseArticle">
+
+                <table class="layui-table">
+                    <colgroup>
+                        <col width="50">
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>课程名称</th>
+                        <th>指导老师</th>
+                        <th>上传时间</th>
+                        <th>课题介绍</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="chooseArticle">
+                    <tr v-for="pre in preview">
+                        <td id="uuid">{{ pre.uuid }}</td>
+                        <td>{{ pre.articlename }}</td>
+                        <td>{{ pre.articleauth }}</td>
+                        <td>{{ pre.articlecreatetime }}</td>
+                        <td>{{ pre.articlevalue }}</td>
+                        <td>{{ pre.status }}</td>
+                        <td><a onclick="del(this)">删除</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+        <br>
+        <div class="search-box ue-clear">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>选题区域</legend>
+                <br>
+                <div class="search-area">
+                    <div class="kv-item ue-clear">
+                        <label>选择类型:</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div class="kv-item-content">
+                            <select>
+                                <option name="select"></option>
+                                <option name="select">审核中</option>
+                                <option name="select">已审核</option>
+                                <option name="select">未审核</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="kv-item ue-clear">
+                    <label><span class="impInfo"></span>指导老师:</label>
+                    <div class="kv-item-content">
+                        <input type="text" style="width: 120px;" name="articleauth" placeholder="指导老师"/>
+                    </div>
+                    <div class="search-button">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input class="button" onclick="seach()"
+                                                                               type="button" value="搜索一下"/>
+                    </div>
+                </div>
+            </fieldset>
+
+
+            <!--<div class="table">
+                <div class="opt ue-clear">
+                    <span class="sortarea">
+                        <span class="sort">
+                            <label>排序：</label>
+                            <span class="name">
+                                <i class="icon"></i>
+                                <span class="text">名称</span>
+                            </span>
+                        </span>
+
+                        <i class="list"></i>
+                        <i class="card"></i>
+                    </span>
+                    <span class="optarea">
+                        <a href="javascript:;" class="add" onclick="add()">
+                            <i class="icon"></i>
+                            <span class="text">添加</span>
+                        </a>
+                        <a href="javascript:;" class="delete">
+                            <i class="icon"></i>
+                            <span class="text">删除</span>
+                        </a>
+
+                        <a href="javascript:;" class="statistics">
+                            <i class="icon"></i>
+                            <span class="text">统计</span>
+                        </a>
+
+                        <a href="javascript:;" class="config">
+                            <i class="icon"></i>
+                            <span class="text">配置</span>
+                        </a>
+                    </span>
+                </div>-->
+
+            <div class="articleTable" id="article">
+
+                <table id="articletable" class="layui-table">
+                    <colgroup>
+                        <col width="50">
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>课程名称</th>
+                        <th>指导老师</th>
+                        <th>上传时间</th>
+                        <th>课题介绍</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="articleGrid" class="tbody">
+                    <tr v-for="pre in preview" onclick="click(this)">
+                        <td id="id">{{ pre.uuid }}</td>
+                        <td>{{ pre.articlename }}</td>
+                        <td>{{ pre.articleauth }}</td>
+                        <td>{{ pre.articlecreatetime }}</td>
+                        <td>{{ pre.articlevalue }}</td>
+                        <td>{{ pre.status }}</td>
+                        <td><a onclick="detail(this)">查看</a>&nbsp;&nbsp;<a onclick="choose(this)">选题</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div id="pTable" style="width: 1200px;">
+                    <div id="laypage">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+</body>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript" src="js/jquery.select.js"></script>
+<script type="text/javascript" src="js/core.js"></script>
+<script type="text/javascript" src="js/jquery.pagination.js"></script>
+<script type="text/javascript" src="js/jquery.grid.js"></script>
+<script type="text/javascript" src="js/WdatePicker.js"></script>
+<script type="text/javascript" src="../js/jquery.cookie.js"></script>
+<script type="text/javascript" src="../js/application.js"></script>
+<script type="text/javascript" src="../js/vue.js"></script>
+<script type="text/javascript" src="../layui-v2.3.0/layui/layui.js"></script>
+<script type="text/javascript">
+
+
+
+    var ChooseArticle = new Vue({
+        el: '#ChooseArticle',
+        data: {
+            preview: ""
+        }
+    });
+    $.ajax({
+        url: "/getArticleByChoose",
+        type: "POST",
+        data: {"token": getCookie("token")},
+        success: function (res) {
+            var a = res.replace(/"status":"1"/g, "\"status\":\"审核中\"");
+            var b = a.replace(/"status":"0"/g, "\"status\":\"未审核\"");
+            var c = b.replace(/"status":"2"/g, "\"status\":\"已审核\"");
+            ChooseArticle.preview = JSON.parse(c);
+        }
+    });
+
+
+    var article = new Vue({
+        el: '#article',
+        data: {
+            preview: ""
+        }
+    });
+    layui.use('laypage', function () {
+        var laypage = layui.laypage;
+        $.ajax({
+            url:"/getArticleCount",
+            type:"POST",
+            data:{},
+            success:function (res) {
+                debugger;
+                console.log(res);
+                laypage.render({
+                    elem: 'pTable'
+                    , count: res
+                    , limit: 5
+                    , jump: function (obj, first) {
+                        //obj包含了当前分页的所有参数，比如：
+                        //console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                        //  console.log(obj.limit); //得到每页显示的条数
+                        debugger;
+                        var jon={};
+                        jon['curr']=obj.curr;
+                        jon['limit']=obj.limit;
+
+                        $.ajax({
+                            url: "/getArticle",
+                            type: "POST",
+                            data: {"jon": JSON.stringify(jon)},
+                            success: function (res) {
+                                debugger;
+                                var a = res.replace(/"status":"1"/g, "\"status\":\"审核中\"");
+                                var b = a.replace(/"status":"0"/g, "\"status\":\"未审核\"");
+                                var c = b.replace(/"status":"2"/g, "\"status\":\"已审核\"");
+                                article.preview = JSON.parse(c);
+                            }
+                        });
+                        //首次不执行
+                        if (1) {
+                            //do something
+                        }
+                    }
+                });
+            },
+            error:function (res) {
+                layer.msg("获取数据时发生错误，请重试!!!");
+                console.log(res);
+            }
+        });
+    });
+
+
+
+
+    function seach() {
+        var jon = {};
+        jon['articleauth'] = $("input[name='articleauth']").val();
+        if ($("option[name='select']:selected").val() == '已审核') {
+            jon['status'] = '2';
+        } else if ($("option[name='select']:selected").val() == "未审核") {
+            jon['status'] = '0';
+        } else if ($("option[name='select']:selected").val() == "审核中") {
+            jon['status'] = '1';
+        } else {
+            jon['status'] = '';
+        }
+        layui.use('laypage', function () {
+            var laypage = layui.laypage;
+            $.ajax({
+                url:"/getArticleCount2",
+                type:"POST",
+                data:{"jon": JSON.stringify(jon)},
+                success:function (res) {
+                    debugger;
+                    console.log(res);
+                    laypage.render({
+                        elem: 'pTable'
+                        , count: res
+                        , limit: 5
+                        , jump: function (obj, first) {
+                            //obj包含了当前分页的所有参数，比如：
+                            //console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                            //  console.log(obj.limit); //得到每页显示的条数
+                            debugger;
+                            jon['curr']=obj.curr;
+                            jon['limit']=obj.limit;
+
+                            $.ajax({
+                                url: "/searchArticle",
+                                type: "POST",
+                                async: false,
+                                data: {"jon": JSON.stringify(jon)},
+                                success: function (res) {
+                                    console.log(res);
+                                    //正则替换页面显示字段
+                                    var a = res.replace(/"status":"1"/g, "\"status\":\"审核中\"");
+                                    var b = a.replace(/"status":"0"/g, "\"status\":\"未审核\"");
+                                    var c = b.replace(/"status":"2"/g, "\"status\":\"已审核\"");
+                                    article.preview = JSON.parse(c);
+                                }
+                            });
+                            //首次不执行
+                            if (1) {
+                                //do something
+                            }
+                        }
+                    });
+                },
+                error:function (res) {
+                    layer.msg("获取数据时发生错误，请重试!!!");
+                    console.log(res);
+                }
+            });
+        });
+    }
+
+    function detail(e) {
+        debugger;
+        var row = e.parentNode.parentNode.rowIndex;
+        var id = $("#articleGrid tr:eq(" + (row - 1) + ") td:eq(0)").html();
+        var articlename = $("#articleGrid tr:eq(" + (row - 1) + ") td:eq(1)").html();
+        var articlevalue = $("#articleGrid tr:eq(" + (row - 1) + ") td:eq(4)").html();
+        var status = $("#articleGrid tr:eq(" + (row - 1) + ") td:eq(5)").html();
+        $('input[name="idtext"]').val(id);
+        $('input[name="nametext"]').val(articlename);
+        $('input[name="valuetext"]').val(articlevalue);
+        $('input[name="statustext"]').val(status);
+
+        // alert(id);
+
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.open({
+                type: 1,
+                title: '查看课题',
+                closeBtn: 2,
+                area: ['400px', '260px'],
+                anim: 1,
+                shadeClose: true,
+                content: $('#articleDetail')
+            });
+        });
+    }
+
+    function del(e) {
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.confirm('确定要取消选题吗?', {
+                icon: 3,
+                btn: ['确定', '取消']
+            }, function () {
+                debugger;
+                var row = e.parentNode.parentNode.rowIndex;
+                var id = $("#chooseArticle tr:eq(" + (row - 1) + ") td:eq(0)").html();
+                var jon = {};
+                jon['artid'] = id;
+                jon['token'] = getCookie('token');
+                $.ajax({
+                    url: "/delArticleByChoose",
+                    type: "POST",
+                    data: {"jon": JSON.stringify(jon)},
+                    success: function (res) {
+                        layui.use('layer', function () {
+                            var layer = layui.layer;
+                            layer.msg('删除成功!!!', {
+                                icon: 1
+                            });
+                        });
+                        //e.parentNode.parentNode.remove();
+                        location.reload();
+                    },
+                    error: function (res) {
+                        layui.use('layer', function () {
+                            var layer = layui.layer;
+                            layer.msg('删除失败,请联系管理员!!!', {
+                                icon: 2
+                            });
+                        });
+                    }
+                });
+            });
+        });
+    }
+
+    function choose(e) {
+        debugger;
+        if(document.getElementById('chooseArticle').childNodes.length!='0'){
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.msg('您已经选过课题了，请删除后重选!!!', {
+                    icon: 2
+                });
+            });
+            return;
+        }
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.confirm('确定要选择该课题吗?', {
+                icon: 3,
+                btn: ['确定', '取消']
+            }, function () {
+                debugger;
+                var row = e.parentNode.parentNode.rowIndex;
+                var id = $("#articleGrid tr:eq(" + (row - 1) + ") td:eq(0)").html();
+                var name = $("#articleGrid tr:eq(" + (row - 1) + ") td:eq(1)").html();
+                var jon = {};
+                jon['artid'] = id;
+                jon['token'] = getCookie('token');
+                $.ajax({
+                    url: "/chooseArticle",
+                    type: "POST",
+                    async: false,
+                    data: {"jon": JSON.stringify(jon)},
+                    success: function (res) {
+                        layui.use('layer', function () {
+                            var layer = layui.layer;
+                            layer.msg('恭喜你,成功选择题目：' + name + '!!!', {
+                                icon: 6
+                            });
+                        });
+                        location.reload();
+                    },
+                    error: function (res) {
+                        layui.use('layer', function () {
+                            var layer = layui.layer;
+                            layer.msg('选题失败,请联系管理员!!!', {
+                                icon: 2
+                            });
+                        });
+                    }
+                });
+            });
+        });
+    }
+
+
+</script>
+</html>

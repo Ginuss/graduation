@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.client.eurekaclient.mapper.ReportMapper">
+  <resultMap id="BaseResultMap" type="com.client.eurekaclient.pojo.Report">
+    <id column="uuid" jdbcType="VARCHAR" property="uuid" />
+    <result column="repname" jdbcType="VARCHAR" property="repname" />
+    <result column="repvalue" jdbcType="VARCHAR" property="repvalue" />
+    <result column="repauth" jdbcType="VARCHAR" property="repauth" />
+    <result column="reprecordid" jdbcType="VARCHAR" property="reprecordid" />
+    <result column="repcreatetime" jdbcType="VARCHAR" property="repcreatetime" />
+    <result column="repedittime" jdbcType="VARCHAR" property="repedittime" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="rephandler" jdbcType="VARCHAR" property="rephandler" />
+    <result column="articleid" jdbcType="VARCHAR" property="articleid" />
+    <result column="reportaddr" jdbcType="VARCHAR" property="reportaddr" />
+    <result column="creater" jdbcType="VARCHAR" property="creater" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    uuid, repname, repvalue, repauth, reprecordid, repcreatetime, repedittime, status, 
+    rephandler, articleid, reportaddr, creater
+  </sql>
+  <select id="selectByExample" parameterType="com.client.eurekaclient.pojo.ReportExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from report
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from report
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from report
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" keyColumn="uuid" keyProperty="uuid" parameterType="com.client.eurekaclient.pojo.Report" useGeneratedKeys="true">
+    insert into report (repname, repvalue, repauth, 
+      reprecordid, repcreatetime, repedittime, 
+      status, rephandler, articleid, 
+      reportaddr, creater)
+    values (#{repname,jdbcType=VARCHAR}, #{repvalue,jdbcType=VARCHAR}, #{repauth,jdbcType=VARCHAR}, 
+      #{reprecordid,jdbcType=VARCHAR}, #{repcreatetime,jdbcType=VARCHAR}, #{repedittime,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{rephandler,jdbcType=VARCHAR}, #{articleid,jdbcType=VARCHAR}, 
+      #{reportaddr,jdbcType=VARCHAR}, #{creater,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="uuid" keyProperty="uuid" parameterType="com.client.eurekaclient.pojo.Report" useGeneratedKeys="true">
+    insert into report
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="repname != null">
+        repname,
+      </if>
+      <if test="repvalue != null">
+        repvalue,
+      </if>
+      <if test="repauth != null">
+        repauth,
+      </if>
+      <if test="reprecordid != null">
+        reprecordid,
+      </if>
+      <if test="repcreatetime != null">
+        repcreatetime,
+      </if>
+      <if test="repedittime != null">
+        repedittime,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="rephandler != null">
+        rephandler,
+      </if>
+      <if test="articleid != null">
+        articleid,
+      </if>
+      <if test="reportaddr != null">
+        reportaddr,
+      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="repname != null">
+        #{repname,jdbcType=VARCHAR},
+      </if>
+      <if test="repvalue != null">
+        #{repvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="repauth != null">
+        #{repauth,jdbcType=VARCHAR},
+      </if>
+      <if test="reprecordid != null">
+        #{reprecordid,jdbcType=VARCHAR},
+      </if>
+      <if test="repcreatetime != null">
+        #{repcreatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="repedittime != null">
+        #{repedittime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="rephandler != null">
+        #{rephandler,jdbcType=VARCHAR},
+      </if>
+      <if test="articleid != null">
+        #{articleid,jdbcType=VARCHAR},
+      </if>
+      <if test="reportaddr != null">
+        #{reportaddr,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.client.eurekaclient.pojo.Report">
+    update report
+    <set>
+      <if test="repname != null">
+        repname = #{repname,jdbcType=VARCHAR},
+      </if>
+      <if test="repvalue != null">
+        repvalue = #{repvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="repauth != null">
+        repauth = #{repauth,jdbcType=VARCHAR},
+      </if>
+      <if test="reprecordid != null">
+        reprecordid = #{reprecordid,jdbcType=VARCHAR},
+      </if>
+      <if test="repcreatetime != null">
+        repcreatetime = #{repcreatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="repedittime != null">
+        repedittime = #{repedittime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="rephandler != null">
+        rephandler = #{rephandler,jdbcType=VARCHAR},
+      </if>
+      <if test="articleid != null">
+        articleid = #{articleid,jdbcType=VARCHAR},
+      </if>
+      <if test="reportaddr != null">
+        reportaddr = #{reportaddr,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        creater = #{creater,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.client.eurekaclient.pojo.Report">
+    update report
+    set repname = #{repname,jdbcType=VARCHAR},
+      repvalue = #{repvalue,jdbcType=VARCHAR},
+      repauth = #{repauth,jdbcType=VARCHAR},
+      reprecordid = #{reprecordid,jdbcType=VARCHAR},
+      repcreatetime = #{repcreatetime,jdbcType=VARCHAR},
+      repedittime = #{repedittime,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      rephandler = #{rephandler,jdbcType=VARCHAR},
+      articleid = #{articleid,jdbcType=VARCHAR},
+      reportaddr = #{reportaddr,jdbcType=VARCHAR},
+      creater = #{creater,jdbcType=VARCHAR}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+</mapper>

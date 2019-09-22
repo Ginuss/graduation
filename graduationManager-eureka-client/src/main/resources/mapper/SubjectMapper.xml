@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.client.eurekaclient.mapper.SubjectMapper">
+  <resultMap id="BaseResultMap" type="com.client.eurekaclient.pojo.Subject">
+    <id column="uuid" jdbcType="VARCHAR" property="uuid" />
+    <result column="subname" jdbcType="VARCHAR" property="subname" />
+    <result column="subvalue" jdbcType="VARCHAR" property="subvalue" />
+    <result column="subtype" jdbcType="VARCHAR" property="subtype" />
+    <result column="subauth" jdbcType="VARCHAR" property="subauth" />
+    <result column="subhandler" jdbcType="VARCHAR" property="subhandler" />
+    <result column="subrecordid" jdbcType="VARCHAR" property="subrecordid" />
+    <result column="grade" jdbcType="VARCHAR" property="grade" />
+    <result column="subcreatetime" jdbcType="VARCHAR" property="subcreatetime" />
+    <result column="subedittime" jdbcType="VARCHAR" property="subedittime" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="subjectadd" jdbcType="VARCHAR" property="subjectadd" />
+    <result column="articleid" jdbcType="VARCHAR" property="articleid" />
+    <result column="creater" jdbcType="VARCHAR" property="creater" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    uuid, subname, subvalue, subtype, subauth, subhandler, subrecordid, grade, subcreatetime, 
+    subedittime, status, subjectadd, articleid, creater
+  </sql>
+  <select id="selectByExample" parameterType="com.client.eurekaclient.pojo.SubjectExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from subject
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from subject
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from subject
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" keyColumn="uuid" keyProperty="uuid" parameterType="com.client.eurekaclient.pojo.Subject" useGeneratedKeys="true">
+    insert into subject (subname, subvalue, subtype, 
+      subauth, subhandler, subrecordid, 
+      grade, subcreatetime, subedittime, 
+      status, subjectadd, articleid, 
+      creater)
+    values (#{subname,jdbcType=VARCHAR}, #{subvalue,jdbcType=VARCHAR}, #{subtype,jdbcType=VARCHAR}, 
+      #{subauth,jdbcType=VARCHAR}, #{subhandler,jdbcType=VARCHAR}, #{subrecordid,jdbcType=VARCHAR}, 
+      #{grade,jdbcType=VARCHAR}, #{subcreatetime,jdbcType=VARCHAR}, #{subedittime,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{subjectadd,jdbcType=VARCHAR}, #{articleid,jdbcType=VARCHAR}, 
+      #{creater,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="uuid" keyProperty="uuid" parameterType="com.client.eurekaclient.pojo.Subject" useGeneratedKeys="true">
+    insert into subject
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="subname != null">
+        subname,
+      </if>
+      <if test="subvalue != null">
+        subvalue,
+      </if>
+      <if test="subtype != null">
+        subtype,
+      </if>
+      <if test="subauth != null">
+        subauth,
+      </if>
+      <if test="subhandler != null">
+        subhandler,
+      </if>
+      <if test="subrecordid != null">
+        subrecordid,
+      </if>
+      <if test="grade != null">
+        grade,
+      </if>
+      <if test="subcreatetime != null">
+        subcreatetime,
+      </if>
+      <if test="subedittime != null">
+        subedittime,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="subjectadd != null">
+        subjectadd,
+      </if>
+      <if test="articleid != null">
+        articleid,
+      </if>
+      <if test="creater != null">
+        creater,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="subname != null">
+        #{subname,jdbcType=VARCHAR},
+      </if>
+      <if test="subvalue != null">
+        #{subvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="subtype != null">
+        #{subtype,jdbcType=VARCHAR},
+      </if>
+      <if test="subauth != null">
+        #{subauth,jdbcType=VARCHAR},
+      </if>
+      <if test="subhandler != null">
+        #{subhandler,jdbcType=VARCHAR},
+      </if>
+      <if test="subrecordid != null">
+        #{subrecordid,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null">
+        #{grade,jdbcType=VARCHAR},
+      </if>
+      <if test="subcreatetime != null">
+        #{subcreatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="subedittime != null">
+        #{subedittime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectadd != null">
+        #{subjectadd,jdbcType=VARCHAR},
+      </if>
+      <if test="articleid != null">
+        #{articleid,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.client.eurekaclient.pojo.Subject">
+    update subject
+    <set>
+      <if test="subname != null">
+        subname = #{subname,jdbcType=VARCHAR},
+      </if>
+      <if test="subvalue != null">
+        subvalue = #{subvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="subtype != null">
+        subtype = #{subtype,jdbcType=VARCHAR},
+      </if>
+      <if test="subauth != null">
+        subauth = #{subauth,jdbcType=VARCHAR},
+      </if>
+      <if test="subhandler != null">
+        subhandler = #{subhandler,jdbcType=VARCHAR},
+      </if>
+      <if test="subrecordid != null">
+        subrecordid = #{subrecordid,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null">
+        grade = #{grade,jdbcType=VARCHAR},
+      </if>
+      <if test="subcreatetime != null">
+        subcreatetime = #{subcreatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="subedittime != null">
+        subedittime = #{subedittime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectadd != null">
+        subjectadd = #{subjectadd,jdbcType=VARCHAR},
+      </if>
+      <if test="articleid != null">
+        articleid = #{articleid,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        creater = #{creater,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.client.eurekaclient.pojo.Subject">
+    update subject
+    set subname = #{subname,jdbcType=VARCHAR},
+      subvalue = #{subvalue,jdbcType=VARCHAR},
+      subtype = #{subtype,jdbcType=VARCHAR},
+      subauth = #{subauth,jdbcType=VARCHAR},
+      subhandler = #{subhandler,jdbcType=VARCHAR},
+      subrecordid = #{subrecordid,jdbcType=VARCHAR},
+      grade = #{grade,jdbcType=VARCHAR},
+      subcreatetime = #{subcreatetime,jdbcType=VARCHAR},
+      subedittime = #{subedittime,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      subjectadd = #{subjectadd,jdbcType=VARCHAR},
+      articleid = #{articleid,jdbcType=VARCHAR},
+      creater = #{creater,jdbcType=VARCHAR}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+</mapper>

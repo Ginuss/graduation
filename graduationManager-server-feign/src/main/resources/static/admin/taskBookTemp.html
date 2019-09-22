@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/WdatePicker.css" />
+    <link rel="stylesheet" type="text/css" href="css/skin_/form.css" />
+    <link rel="stylesheet" type="text/css" href="../layui-v2.3.0/layui/css/layui.css"/>
+    <link href="umeditor/themes/default/_css/umeditor.css" type="text/css" rel="stylesheet">
+    <title></title>
+</head>
+
+<body>
+<div id = "container">
+    <div id="hd"></div>
+    <div id="bd">
+        <div id="main">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>课题基本信息</legend>
+                <table class="layui-table">
+                    <input type="text" name="idtext" style="display: none"/>
+                    <tr>
+                        <td>课程名称</td>
+                        <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="artname" readonly/></td>
+                    </tr>
+                    <tr>
+                        <td>学生联系方式</td>
+                        <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="email" readonly/></td>
+                    </tr>
+                    <tr>
+                        <td>学生姓名</td>
+                        <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="stuname" readonly/></td>
+                    </tr>
+                </table>
+            </fieldset>
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>任务书详情</legend><br>
+                <blockquote class="layui-elem-quote layui-quote-nm" style="color: red;" id="blockname">请指导老师按课题要求给所属学生下发任务书!!!</blockquote>
+                <div class="subfild-content remarkes-info">
+                    <div class="kv-item ue-clear">
+                        <label><span class="impInfo">*</span>任务书</label>
+                        <div class="kv-item-content">
+                            <textarea placeholder="任务书" name="tasktext" id="content" style="width:800px;height:240px;">asdasdasd</textarea>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="kv-item ue-clear">
+                    <label><span class="impInfo">*</span>附件上传</label>
+                    <div class="kv-item-content file">
+                        <span class="text"></span>
+                        <input type="file" />
+                        <input type="button" class="button normal long2" value="浏览.." />
+                    </div>
+                </div>-->
+                <div class="buttons">
+                    <input class="button" type="button" onclick="submit()" value="确认提交" />
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>
+</div>
+
+</body>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript" src="js/jquery.select.js"></script>
+<script type="text/javascript" src="js/WdatePicker.js"></script>
+<script type="text/javascript" src="../js/jquery.cookie.js"></script>
+<script type="text/javascript" src="../js/application.js"></script>
+<script type="text/javascript" src="../js/vue.js"></script>
+<script type="text/javascript" src="../layui-v2.3.0/layui/layui.js"></script>
+<script type="text/javascript">
+    window.UMEDITOR_HOME_URL = 'umeditor/';  // 请换成绝对路径
+</script>
+<script type="text/javascript" src="js/umeditor.config.js"></script>
+<script type="text/javascript" src="js/editor_api.js"></script>
+<script type="text/javascript" src="umeditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+    showRemind('input[type=text],textarea','color5');
+
+    UM.getEditor('content');
+    //获取url地址中参数（不乱码写法）===============================================
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r != null) return decodeURI(r[2]);
+        return null;
+    }
+
+    $('input[name="idtext"]').val(GetQueryString("stuid"));
+    $('input[name="artname"]').val(GetQueryString("artname"));
+    $('input[name="stuname"]').val(GetQueryString("stuname"));
+    $('input[name="email"]').val(GetQueryString("email"));
+
+    var jon={};
+    jon['artname'] = GetQueryString("artname");
+    $.ajax({
+        url: "/queryTaskBook",
+        type: "POST",
+        data: {"jon": JSON.stringify(jon)},
+        success: function (res) {
+            debugger;
+            if(res==""){
+                UM.getEditor('content').setContent("暂无任务书信息!!!");
+            }else{
+                UM.getEditor('content').setContent(res);
+                //如果有任务书，设置不可编辑
+                UM.getEditor('content').setDisabled('fullscreen');
+                //disableBtn("enable");
+                //设置提交button不可见
+                $('input[type="button"]').hide();
+            }
+        },
+        error: function (res) {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.msg('查询数据出现异常，请重试!!!', {
+                    icon: 2
+                });
+            });
+        }
+    });
+
+    function submit(){
+        debugger;
+        var jon = {};
+        jon['taskname'] = $('input[name="artname"]').val();
+        jon['teaname'] = GetQueryString("teaname");
+        jon['taskvalue'] =$('p').text();
+        jon['articlename'] =$('input[name="artname"]').val();
+        $.ajax({
+            url: "/submitTaskBook",
+            type: "POST",
+            data: {"jon": JSON.stringify(jon)},
+            success: function (res) {
+                debugger;
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('任务书下发成功，请通知学生查看!!!', {
+                        icon: 1
+                    });
+                });
+                setTimeout(location.reload(),1000);
+
+            },
+            error: function (res) {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('保存数据出现异常，请重试!!!', {
+                        icon: 2
+                    });
+                });
+            }
+        });
+    }
+
+</script>
+</html>

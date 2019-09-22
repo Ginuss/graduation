@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<link rel="stylesheet" type="text/css" href="css/skin_/index.css" />
+    <link rel="stylesheet" type="text/css" href="../layui-v2.3.0/layui/css/layui.css"/>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.9.2.custom.min.js"></script>
+    <script type="text/javascript" src="../layui-v2.3.0/layui/layui.js"></script>
+<title>首页</title>
+</head>
+<body>
+<div id="detail" style="display: none;">
+    <div id="title" style="text-align: center">
+        <span id="noticename" name="noticename" style="font-size: 25px">标题</span>
+    </div>
+    <br>
+    <div id="auth" style="text-align: center">
+        <span id="noticeauth" name="noticeauth" style="font-size: 18px;font-style: italic">作者</span>
+    </div>
+    <br>
+    <div id="content">
+        <div class="layui-form-item layui-form-text">
+            <textarea name="content" id="noticevalue" class="layui-textarea" rows="16" style="border: none;font-size: 18px" readonly></textarea>
+        </div>
+    </div>
+</div>
+<div id="container">
+	<div id="hd">
+    </div>
+    <div id="bd">
+    	<div id="main">
+            <ul class="content-list">
+
+                <li class="content-item news">
+                	<h2 class="content-hd" style="width: 1500px">
+                    	<span class="opt">
+                        	<span class="refresh" title="刷新"></span>
+                            <span class="setting" title="设置"></span>
+                            <span class="report" title="导出"></span>
+                            <span class="close" title="关闭"></span>
+                        </span>
+                    	<span class="title">通知公告</span>
+                    </h2>
+                    <div class="content-bd"  style="height: 500px;">
+                    	<ul class="content-list things">
+                        	<li class="content-list-item" id="list">
+                            	<!--<i class="icon"></i>
+                                <a href="javascript:;">查干湖冬捕壮观景象</a>-->
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                
+
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript">
+	var minwidth = 282;
+	resizeWidth();
+	$(top.window).resize(function(e) {
+       resizeWidth();
+    });
+	$(function() {
+		$( ".content-list" ).sortable({
+		  revert: true,
+		  handle:'h2'
+		});
+		
+	});
+	
+function resizeWidth (){
+	if($('#main').width() / 3 < minwidth){
+		$('.content-item').width(($('#main').width() / 2) - 15);
+	}else{
+		$('.content-item').width(($('#main').width() / 3) - 15);	
+	}
+		
+}
+
+//================================================================
+    window.onload = function(){
+        getNotice();
+    };
+function getNotice() {
+    $.ajax({
+        url: "/getNotice",
+        type: "POST",
+        data: {},
+        success: function (result) {
+            var res = JSON.parse(result);
+            //console.log(res.res);
+            var json = eval("("+res.res+")");
+            for(var a in json){
+                document.getElementById("list").innerHTML+="<i class=\"icon\"></i><a onclick=\"detail(this);\" style=\"font-size:14px;\">"+json[a].noticename+"</a><br><br>";
+                //alert(json[a].noticename);
+            }
+        }
+    })
+}
+
+    function detail(e){
+        var jon = {};
+        jon['noticename'] = e.textContent;
+        $.ajax({
+            url: "/getNoticeByName",
+            type: "POST",
+            data: {"jon":JSON.stringify(jon)},
+            success: function (result) {
+                debugger;
+                var noticename = $.parseJSON(result)[0].noticename;
+                var noticeauth = $.parseJSON(result)[0].noticeauthor;
+                var noticevalue = $.parseJSON(result)[0].noticevalue;
+                $('textarea[name="content"]').val(noticevalue);
+                $('#noticename').text(noticename);
+                $('#noticeauth').text(noticeauth);
+            }
+        });
+
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.open({
+                type: 1,
+                title: '公告详情',
+                closeBtn: 2,
+                area: ['600px', '500px'],
+                anim: 1,
+                shadeClose: true,
+                content: $('#detail')
+            });
+        });
+    }
+</script>
+</html>

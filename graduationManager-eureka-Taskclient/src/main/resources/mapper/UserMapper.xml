@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.client.eurekaclient.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.client.eurekaclient.pojo.User">
+    <id column="uuid" jdbcType="VARCHAR" property="uuid" />
+    <result column="loginname" jdbcType="VARCHAR" property="loginname" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="role" jdbcType="VARCHAR" property="role" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    uuid, loginname, name, password, role, email
+  </sql>
+  <select id="selectByExample" parameterType="com.client.eurekaclient.pojo.UserExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from user
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" keyColumn="uuid" keyProperty="uuid" parameterType="com.client.eurekaclient.pojo.User" useGeneratedKeys="true">
+    insert into user (loginname, name, password, 
+      role, email)
+    values (#{loginname,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{role,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="uuid" keyProperty="uuid" parameterType="com.client.eurekaclient.pojo.User" useGeneratedKeys="true">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="loginname != null">
+        loginname,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="role != null">
+        role,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="loginname != null">
+        #{loginname,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="role != null">
+        #{role,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.client.eurekaclient.pojo.User">
+    update user
+    <set>
+      <if test="loginname != null">
+        loginname = #{loginname,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="role != null">
+        role = #{role,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.client.eurekaclient.pojo.User">
+    update user
+    set loginname = #{loginname,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      role = #{role,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <select id="getPass" parameterType="java.lang.String" resultType="java.lang.String">
+    select password
+    from user
+    where loginname = #{loginName,jdbcType=VARCHAR}
+    and role = #{role,jdbcType=VARCHAR}
+  </select>
+  <select id="getUser" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where loginname = #{loginName,jdbcType=VARCHAR}
+    and role = #{role,jdbcType=VARCHAR}
+  </select>
+  <select id="getStudentCount" resultType="java.lang.Integer">
+    select count(*) from user where role = 1
+  </select>
+  <select id="getStudent" parameterType="java.lang.Integer" resultType="java.util.Map">
+    SELECT
+	`user`.*,article.articlename,article.articleauth
+    FROM
+        (
+            (
+                USER
+                INNER JOIN choosearticle ON user.uuid = choosearticle.stuid
+            )
+            INNER JOIN article ON choosearticle.articleid = article.uuid
+        ) where user.role = 1
+          limit #{start,jdbcType=VARCHAR},#{limit,jdbcType=VARCHAR}
+  </select>
+  <select id="searchStudentCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(*) from user where role = 1 and name like CONCAT(CONCAT('%',#{stuname,jdbcType=VARCHAR}),'%')
+  </select>
+  <select id="searchStudent" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from user where role = 1
+    <if test="stuname != ''">
+      and name like CONCAT(CONCAT('%',#{stuname,jdbcType=VARCHAR}),'%')
+    </if>
+    limit #{start,jdbcType=VARCHAR},#{limit,jdbcType=VARCHAR}
+  </select>
+  <insert id="importExcel" parameterType="java.lang.String">
+    insert into user
+    (uuid,loginname,name,password,role)
+    values
+    (#{uuid,jdbcType=VARCHAR},#{loginname,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},'123',#{role,jdbcType=VARCHAR})
+  </insert>
+</mapper>

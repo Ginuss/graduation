@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/WdatePicker.css"/>
+    <link rel="stylesheet" type="text/css" href="css/skin_/table.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery.grid.css"/>
+    <link rel="stylesheet" type="text/css" href="../layui-v2.3.0/layui/css/layui.css"/>
+
+    <title></title>
+</head>
+
+<body>
+<div id = "container">
+    <div id="hd"></div>
+    <div id="bd">
+        <div id="main">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>修改密码</legend><br><br>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" style="border: 0px;outline:none;cursor: pointer;" placeholder="姓名" autocomplete="off" class="layui-input" readonly>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">账号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="login" style="border: 0px;outline:none;cursor: pointer;" placeholder="账号" autocomplete="off" class="layui-input" readonly>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">权限</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="role" style="border: 0px;outline:none;cursor: pointer;" placeholder="权限" autocomplete="off" class="layui-input" readonly>
+                    </div><br>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="email" placeholder="邮箱" autocomplete="off" class="layui-input">
+                    </div><br><br>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" style="align-items: center" onclick="submit()">确认修改</button>
+                    </div>
+                </div>
+            </div>
+            </fieldset>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript" src="js/jquery.select.js"></script>
+<script type="text/javascript" src="js/core.js"></script>
+<script type="text/javascript" src="js/jquery.pagination.js"></script>
+<script type="text/javascript" src="js/jquery.grid.js"></script>
+<script type="text/javascript" src="js/WdatePicker.js"></script>
+<script type="text/javascript" src="../js/jquery.cookie.js"></script>
+<script type="text/javascript" src="../js/application.js"></script>
+<script type="text/javascript" src="../js/vue.js"></script>
+<script type="text/javascript" src="../layui-v2.3.0/layui/layui.js"></script>
+<script type="text/javascript">
+var jon = {};
+jon['token'] = getCookie('token');
+$.ajax({
+    url: "/getUserDetail",
+    type: "POST",
+    data: {"jon":JSON.stringify(jon)},
+    success: function (res) {
+        debugger;
+        var json = eval("("+res+")");
+        if(json[0].role=='0'){
+            var role = '管理员';
+        }else if(json[0].role=='1'){
+            var role = '学生';
+        }else if(json[0].role=='2'){
+            var role = '老师';
+        }
+        $('input[name="name"]').val(json[0].name);
+        $('input[name="login"]').val(json[0].loginname);
+        $('input[name="role"]').val(role);
+        $('input[name="email"]').val(json[0].email);
+    },
+    error: function (res) {
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.msg('获取数据失败，请重试!!!', {
+                icon: 2
+            });
+        });
+    }
+});
+
+function submit() {
+    layui.use('layer', function () {
+        var layer = layui.layer;
+        layer.confirm('确定要修改个人信息吗？', {
+            btn: ['确认','取消'] //按钮
+        }, function(){
+            var jon = {};
+            jon['token'] = getCookie('token');
+            jon['email'] = $('input[name="email"]').val();
+            $.ajax({
+                url: "/editUserDetail",
+                type: "POST",
+                data: {"jon":JSON.stringify(jon)},
+                success: function (res) {
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        layer.msg('个人信息修改成功!!!', {
+                            icon: 0
+                        });
+                    });
+
+                },
+                error: function (res) {
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        layer.msg('获取数据失败，请重试!!!', {
+                            icon: 2
+                        });
+                    });
+                }
+            });
+        }, function(){
+
+        });
+    });
+
+
+
+
+}
+
+</script>
+</html>

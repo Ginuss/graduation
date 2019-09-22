@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<link rel="stylesheet" href="css/zTreeStyle/zTreeStyle.css" type="text/css">
+<link rel="stylesheet" type="text/css" href="css/skin_/nav.css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<title>底部内容页</title>
+</head>
+
+<body>
+<div id="container">
+	<div id="bd">
+    	<div class="sidebar">
+        	<div class="sidebar-bg"></div>
+            <i class="sidebar-hide"></i>
+            <h2><a href="javascript:;"><i class="h2-icon" title="切换到树型结构"></i><span>学生用户</span></a></h2>
+            <ul class="nav">
+                <li class="nav-li">
+                	<a href="javascript:;" class="ue-clear"><i class="nav-ivon"></i><span class="nav-text">首页管理</span></a>
+                    <ul class="subnav">
+                        <li class="subnav-li" current href="index.html" data-id="0"><a href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">首页</span></a></li>
+                        <li class="subnav-li" current href="notice.html" data-id="55"><a href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">通知公告</span></a></li>
+                        <li class="subnav-li" href="createNotice.html" data-id="50"><a href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">发布公告</span></a></li>
+                        <li class="subnav-li" href="noticeList.html" data-id="51"><a href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">公告管理</span></a></li>
+
+                    </ul>
+                </li>
+                <li class="nav-li current">
+                	<a href="javascript:;" class="ue-clear"><i class="nav-ivon"></i><span class="nav-text">信息管理</span></a>
+                	<ul class="subnav">
+                        <li class="subnav-li" href="adminDeal.html" data-id="15"><a href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">我的待办</span></a></li>
+                        <li class="subnav-li" href="createArticle.html" data-id="1"><a href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">上传课题</span></a></li>
+                        <li class="subnav-li" href="articleList.html" data-id="2"><a href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">课题列表</span></a></li>
+                        <li class="subnav-li" href="studentList.html" data-id="3"><a href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">学生列表</span></a></li>
+                    </ul>
+                </li>
+                <li class="nav-li">
+                	<a href="javascript:;" class="ue-clear"><i class="nav-ivon"></i><span class="nav-text">过程文档管理</span></a>
+                    <ul class="subnav">
+                    	<li class="subnav-li" href="reportCopy.html" data-id="4"><a href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">开题报告归档</span></a></li>
+                        <li class="subnav-li" href="subjectCopy.html" data-id="5"><a href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">论文归档</span></a></li>
+                    </ul>
+                </li>
+                <li class="nav-li last-nav-li">
+                	<a href="javascript:;" class="ue-clear"><i class="nav-ivon"></i><span class="nav-text">用户和成绩管理</span></a>
+                    <ul class="subnav">
+                    	<li class="subnav-li" href="User.html" data-id="6"><a href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">用户授权</span></a></li>
+                        <li class="subnav-li" href="studentGradeList.html" data-id="7"><a href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">查看成绩</span></a></li>
+                    </ul>
+                </li>
+                <li class="nav-li last-nav-li">
+                    <a href="javascript:;" class="ue-clear"><i class="nav-ivon"></i><span class="nav-text">用户设置</span></a>
+                    <ul class="subnav">
+                        <li class="subnav-li" href="editPass.html" data-id="8"><a href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">修改密码</span></a></li>
+                        <li class="subnav-li" href="userDetail.html" data-id="9"><a href="javascript:;" class="ue-clear"><i class="subnav-icon"></i><span class="subnav-text">个人信息维护</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="tree-list outwindow">
+            	<div class="tree ztree"></div>
+            </div>
+        </div>
+        <div class="main">
+        	<div class="title">
+                <i class="sidebar-show"></i>
+                <ul class="tab ue-clear">
+                   
+                </ul>
+                <i class="tab-more"></i>
+                <i class="tab-close"></i>
+            </div>
+            <div class="content">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="more-bab-list">
+	<ul></ul>
+    <div class="opt-panel-ml"></div>
+    <div class="opt-panel-mr"></div>
+    <div class="opt-panel-bc"></div>
+    <div class="opt-panel-br"></div>
+    <div class="opt-panel-bl"></div>
+</div>
+</body>
+<script type="text/javascript" src="js/nav.js"></script>
+<script type="text/javascript" src="js/Menu.js"></script>
+<script type="text/javascript" src="js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript">
+	var menu = new Menu({
+		defaultSelect: $('.nav').find('li[data-id="0"]')
+	});
+	
+	// 左侧树结构加载
+
+
+
+	
+	
+	$('.sidebar h2').click(function(e) {
+        $('.tree-list').toggleClass('outwindow');
+		$('.nav').toggleClass('outwindow');
+    });
+	
+	$(document).click(function(e) {
+        debugger;
+		if(!$(e.target).is('.tab-more')){
+			 $('.tab-more').removeClass('active');
+			 $('.more-bab-list').hide();
+		}
+    });
+</script>
+</html>

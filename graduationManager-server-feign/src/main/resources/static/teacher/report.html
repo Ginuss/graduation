@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/WdatePicker.css" />
+    <link rel="stylesheet" type="text/css" href="css/skin_/form.css" />
+    <link rel="stylesheet" type="text/css" href="../layui-v2.3.0/layui/css/layui.css"/>
+    <link href="umeditor/themes/default/_css/umeditor.css" type="text/css" rel="stylesheet">
+
+    <title></title>
+</head>
+
+<body>
+<div id="dealReportTask" style="display: none">
+    <table class="layui-table">
+        <tr>
+            <td>id</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type="text" name="id" readonly/></td>
+        </tr>
+        <tr>
+            <td>发起人</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type="text" name="creater" readonly/></td>
+        </tr>
+        <tr>
+            <td>审批操作</td>
+            <td>
+                <select>
+                    <option name="select">通过</option>
+                    <option name="select">驳回</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>审批意见</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="message"/></td>
+        </tr>
+        <tr>
+            <td>审批时间</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="time" readonly/></td>
+        </tr>
+        <tr>
+            <td>审批人</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="person" readonly/></td>
+        </tr>
+    </table>
+    <div style="text-align: center">
+        <input type="button" class="layui-btn layui-btn-primary" value="确认" onclick="submitReportTask()"/>
+    </div>
+</div>
+<div id = "container">
+    <div id="hd"></div>
+    <div id="bd">
+        <div id="main">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>课题基本信息</legend>
+                <table class="layui-table">
+                    <input type="text" name="idtext" style="display: none"/>
+                    <tr>
+                        <td>课程名称</td>
+                        <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="artname" readonly/></td>
+                    </tr>
+                    <tr>
+                        <td>学生联系方式</td>
+                        <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="email" readonly/></td>
+                    </tr>
+                    <tr>
+                        <td>学生姓名</td>
+                        <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="stuname" readonly/></td>
+                    </tr>
+                </table>
+            </fieldset>
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>开题报告详情</legend><br>
+                <blockquote class="layui-elem-quote layui-quote-nm" style="color: red;" id="blockname">66</blockquote>
+                <div class="subfild-content remarkes-info">
+                    <div class="kv-item ue-clear">
+                        <label><span class="impInfo">*</span>开题报告</label>
+                        <div class="kv-item-content">
+                            <textarea placeholder="开题报告" id="content" style="width:800px;height:240px;"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="kv-item ue-clear">
+                    <form class="downReportForm" action="/downloadReport" method="post">
+                        <label><span class="impInfo">*</span>附件下载</label>
+                            <input type="text" name="addr" style="display: none"/>
+                            <input type="text" style="border: 0px;outline:none;cursor: pointer;" name="name" id="addrtext" readonly/>
+                            <input type="submit" class="button normal long2" name="addrbtn" value="查看附件" />
+                    </form>
+                </div>
+                <div class="buttons">
+                    <input class="button" type="button" onclick="Approval()" value="审批" />
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>
+</div>
+
+</body>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript" src="js/jquery.select.js"></script>
+<script type="text/javascript" src="js/WdatePicker.js"></script>
+<script type="text/javascript" src="../js/jquery.cookie.js"></script>
+<script type="text/javascript" src="../js/application.js"></script>
+<script type="text/javascript" src="../js/vue.js"></script>
+<script type="text/javascript" src="../layui-v2.3.0/layui/layui.js"></script>
+<script type="text/javascript">
+    window.UMEDITOR_HOME_URL = 'umeditor/';  // 请换成绝对路径
+</script>
+<script type="text/javascript" src="js/umeditor.config.js"></script>
+<script type="text/javascript" src="js/editor_api.js"></script>
+<script type="text/javascript" src="umeditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+    showRemind('input[type=text],textarea','color5');
+    UM.getEditor('content');
+    function getFormatDate() {
+        var date = new Date();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentDate = date.getFullYear() + "-" + month + "-" + strDate  + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        return currentDate;
+    }
+    //获取url地址中参数（不乱码写法）===============================================
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r != null) return decodeURI(r[2]);
+        return null;
+    }
+    $('input[name="idtext"]').val(GetQueryString("stuid"));
+    $('input[name="artname"]').val(GetQueryString("artname"));
+    $('input[name="stuname"]').val(GetQueryString("stuname"));
+    $('input[name="email"]').val(GetQueryString("email"));
+    $('#blockname').text("请指导老师完成《"+ GetQueryString("artname") +"》的开题报告审批，并通知学生及时查看!!!");
+    var jon = {};
+    jon['stuid'] = GetQueryString("stuid");
+    $.ajax({
+        url: "/getReportByChoose",
+        type: "POST",
+        data: {"jon": JSON.stringify(jon)},
+        success: function (res) {
+            debugger;
+            if(res=='[]'){
+                UM.getEditor('content').setContent("暂未上传开题报告!!!");
+                UM.getEditor('content').setDisabled('fullscreen');
+                $('input[name="name"]').val("暂无开题报告附件");
+                $('input[name="addrbtn"]').hide();
+                $('input[type="button"]').hide();
+            }else{
+                var json = eval("("+res+")");
+                var content = json[0].repvalue;
+                UM.getEditor('content').setContent(content);
+                //如果有任务书，设置不可编辑
+                UM.getEditor('content').setDisabled('fullscreen');
+                //disableBtn("enable");
+                //设置提交button不可见
+                //$('input[type="button"]').hide();
+                debugger;
+                var url = json[0].reportaddr;
+                $('input[name="name"]').val(url.substring(url.lastIndexOf('\\')+1));
+                $('input[name="addr"]').val(url);
+            }
+        },
+        error: function (res) {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.msg('获取数据失败，请重试!!!', {
+                    icon: 2
+                });
+            });
+        }
+    });
+    
+    function Approval() {
+        $.ajax({
+            url: "/getReportByChoose",
+            type: "POST",
+            data: {"jon": JSON.stringify(jon)},
+            success: function (res) {
+                debugger;
+                var json = eval("("+res+")");
+                if(json[0].status=='1'){
+                    var jon = {};
+                    jon['token'] = getCookie('token');
+                    $.ajax({
+                        url: "/getLogo",
+                        type: "POST",
+                        data: {"jon":JSON.stringify(jon)},
+                        success: function (user) {
+                            debugger;
+                            console.log(user);
+                            var jsonUser = JSON.parse(user);
+                            var obj = eval("(" + jsonUser + ")");
+                            var currName =obj.name;
+                            var id = $('input[name="idtext"]').val();
+                            var dealperson = currName;
+                            var dealtime = getFormatDate(new Date());
+                            var creatername = $('input[name="stuname"]').val();
+                            $('input[name="id"]').val(id);
+                            $('input[name="person"]').val(dealperson);
+                            $('input[name="time"]').val(dealtime);
+                            $('input[name="creater"]').val(creatername);
+
+                            layui.use('layer', function () {
+                                var layer = layui.layer;
+                                layer.open({
+                                    type: 1,
+                                    title: '审核报告',
+                                    closeBtn: 2,
+                                    area: ['400px', '350px'],
+                                    anim: 1,
+                                    shadeClose: true,
+                                    content: $('#dealReportTask')
+                                });
+                            });
+
+                        }
+                    });
+                }else{
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        layer.msg('你已经审批过该报告，请不要重复审批!!!', {
+                            icon: 2
+                        });
+                    });
+                }
+            },
+            error: function (res) {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('获取数据失败，请重试!!!', {
+                        icon: 2
+                    });
+                });
+            }
+        });
+
+
+
+    }
+
+    function submitReportTask() {
+        debugger;
+        var jon = {};
+        jon['id'] = $('input[name="id"]').val();
+        jon['currmessage'] = $('input[name="message"]').val();
+        jon['dealtime'] = $('input[name="time"]').val();
+        jon['dealperson'] = $('input[name="person"]').val();
+        jon['dealmethod'] = $("option[name='select']:selected").val();
+        jon['creatername'] = $('input[name="creater"]').val();
+        jon['token'] = getCookie('token');
+
+        $.ajax({
+            url: "/TeaExamineReportTask",
+            type: "POST",
+            data: {"jon": JSON.stringify(jon)},
+            success: function (res) {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('审批成功!!!', {
+                        icon: 1
+                    });
+                });
+                setTimeout(location.reload(),1000);
+            },
+            error: function () {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('流程出现异常，请联系管理员!!!', {
+                        icon: 2
+                    });
+                });
+            }
+        })
+
+    }
+
+</script>
+</html>

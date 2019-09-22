@@ -1,0 +1,409 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/WdatePicker.css"/>
+    <link rel="stylesheet" type="text/css" href="css/skin_/table.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery.grid.css"/>
+    <link rel="stylesheet" type="text/css" href="../layui-v2.3.0/layui/css/layui.css"/>
+
+    <title></title>
+</head>
+
+<body>
+<div id="taskDetail" style="display: none">
+    <table class="layui-table">
+        <colgroup>
+            <col width="50" style="display: none">
+            <col width="150">
+            <col width="150">
+            <col width="150">
+            <col width="220">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th style="display: none">课题id</th>
+            <th>处理人</th>
+            <th>处理时间</th>
+            <th>处理方法</th>
+            <th>备注</th>
+        </tr>
+        </thead>
+        <tbody id="chooseArticle">
+        <tr v-for="pre in preview">
+            <td id="uuid" style="display: none">{{ pre.articleid }}</td>
+            <td>{{ pre.dealperson }}</td>
+            <td>{{ pre.dealtime }}</td>
+            <td>{{ pre.dealmethod }}</td>
+            <td>{{ pre.currmessage }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div id="dealArticleTask" style="display: none">
+    <table class="layui-table">
+        <tr>
+            <td>id</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type="text" name="idtext" readonly/></td>
+        </tr>
+        <tr>
+            <td>发起人</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type="text" name="creatername" readonly/></td>
+        </tr>
+        <tr>
+            <td>审批操作</td>
+            <td>
+                <select>
+                <option name="select">通过</option>
+                <option name="select">驳回</option>
+            </select>
+            </td>
+        </tr>
+        <tr>
+            <td>审批意见</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="currmessage"/></td>
+        </tr>
+        <tr>
+            <td>审批时间</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="dealtime" readonly/></td>
+        </tr>
+        <tr>
+            <td>审批人</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="dealperson" readonly/></td>
+        </tr>
+    </table>
+    <div style="text-align: center">
+        <input type="button" class="layui-btn layui-btn-primary" value="确认" onclick="submitArticleTask()"/>
+    </div>
+</div>
+
+<div id="articleDetail" style="display: none">
+    <table class="layui-table">
+        <tr>
+            <td>id</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type="text" name="idtext" readonly/></td>
+        </tr>
+        <tr>
+            <td>课程名称</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="nametext" readonly/></td>
+        </tr>
+        <tr>
+            <td>课题介绍</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="valuetext" readonly/></td>
+        </tr>
+        <tr>
+            <td>状态</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="statustext" readonly/></td>
+        </tr>
+    </table>
+</div>
+<div id = "container">
+<div id="hd"></div>
+<div id="bd">
+    <div id="main">
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>课题申报待办</legend>
+        </fieldset>
+        <div class="articleTable" id="article">
+            <table id="articletable" class="layui-table">
+                <colgroup>
+                    <col width="50">
+                    <col width="150">
+                    <col width="150">
+                    <col width="150">
+                    <col width="150">
+                    <col width="150">
+                    <col width="150">
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>课程名称</th>
+                    <th>指导老师</th>
+                    <th>发起人</th>
+                    <th>上传时间</th>
+                    <th>课题介绍</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="articleGrid" class="tbody">
+                <tr v-for="pre in preview" onclick="click(this)">
+                    <td id="id">{{ pre.uuid }}</td>
+                    <td>{{ pre.articlename }}</td>
+                    <td>{{ pre.articleauth }}</td>
+                    <td>{{ pre.creater}}</td>
+                    <td>{{ pre.articlecreatetime }}</td>
+                    <td>{{ pre.articlevalue }}</td>
+                    <td>{{ pre.status }}</td>
+                    <td><a onclick="detail(this)">查看</a>&nbsp;&nbsp;<a onclick="dealwith(this)">处理</a></td>
+                </tr>
+                </tbody>
+            </table>
+            <div id="pTable" style="width: 1200px;">
+                <div id="laypage">
+                </div>
+            </div>
+
+        </div>
+
+
+       <!-- <div class="search-box ue-clear">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>开题报告</legend>
+            </fieldset>-->
+
+
+
+
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+</body>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript" src="js/jquery.select.js"></script>
+<script type="text/javascript" src="js/core.js"></script>
+<script type="text/javascript" src="js/jquery.pagination.js"></script>
+<script type="text/javascript" src="js/jquery.grid.js"></script>
+<script type="text/javascript" src="js/WdatePicker.js"></script>
+<script type="text/javascript" src="../js/jquery.cookie.js"></script>
+<script type="text/javascript" src="../js/application.js"></script>
+<script type="text/javascript" src="../js/vue.js"></script>
+<script type="text/javascript" src="../layui-v2.3.0/layui/layui.js"></script>
+<script type="text/javascript">
+    //格式化当前时间
+    function getFormatDate() {
+        var date = new Date();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentDate = date.getFullYear() + "-" + month + "-" + strDate + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        return currentDate;
+    }
+
+
+    var article = new Vue({
+        el: '#article',
+        data: {
+            preview: ""
+        }
+    });
+    layui.use('laypage', function () {
+        var laypage = layui.laypage;
+        var jon = {};
+        jon['token'] = getCookie('token');
+        $.ajax({
+            url:"/getMyHandlerArticleCount",
+            type:"POST",
+            data:{"jon":JSON.stringify(jon)},
+            success:function (res) {
+                debugger;
+                console.log(res);
+                laypage.render({
+                    elem: 'pTable'
+                    , count: res
+                    , limit: 5
+                    , jump: function (obj, first) {
+                        //obj包含了当前分页的所有参数，比如：
+                        //console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                        //  console.log(obj.limit); //得到每页显示的条数
+                        debugger;
+                        var jon={};
+                        jon['curr']=obj.curr;
+                        jon['limit']=obj.limit;
+                        jon['token'] = getCookie('token');
+                        $.ajax({
+                            url: "/getMyHandlerArticle",
+                            type: "POST",
+                            data: {"jon": JSON.stringify(jon)},
+                            success: function (res) {
+                                debugger;
+                                var a = res.replace(/"status":"1"/g, "\"status\":\"审核中\"");
+                                var b = a.replace(/"status":"0"/g, "\"status\":\"未审核\"");
+                                var c = b.replace(/"status":"2"/g, "\"status\":\"已审核\"");
+                                article.preview = JSON.parse(c);
+                            }
+                        });
+                        //首次不执行
+                        if (1) {
+                            //do something
+                        }
+                    }
+                });
+            },
+            error:function (res) {
+                layer.msg("获取数据时发生错误，请重试!!!");
+                console.log(res);
+            }
+        });
+    });
+
+
+
+
+
+    function detail(e) {
+        debugger;
+        var row = e.parentNode.parentNode.rowIndex;
+        var id = $("#articleGrid tr:eq(" + (row - 1) + ") td:eq(0)").html();
+        //得到流程审批历史
+        var taskDetail = new Vue({
+            el: '#taskDetail',
+            data: {
+                preview: ""
+            }
+        });
+        layui.use('laypage', function () {
+            var laypage = layui.laypage;
+            var jon = {};
+            jon['id'] = id;
+            $.ajax({
+                url:"/getArticleRecordCount",
+                type:"POST",
+                data:{"jon":JSON.stringify(jon)},
+                success:function (res) {
+                    debugger;
+                    console.log(res);
+                    laypage.render({
+                        elem: 'pTable'
+                        , count: res
+                        , limit: 5
+                        , jump: function (obj, first) {
+                            //obj包含了当前分页的所有参数，比如：
+                            //console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                            //  console.log(obj.limit); //得到每页显示的条数
+                            debugger;
+                            var jon={};
+                            jon['curr']=obj.curr;
+                            jon['limit']=obj.limit;
+                            jon['id'] = id;
+                            $.ajax({
+                                url: "/getArticleRecord",
+                                type: "POST",
+                                data: {"jon": JSON.stringify(jon)},
+                                success: function (res) {
+                                    debugger;
+                                    taskDetail.preview = JSON.parse(res);
+                                }
+                            });
+                            //首次不执行
+                            if (1) {
+                                //do something
+                            }
+                        }
+                    });
+                },
+                error:function (res) {
+                    layer.msg("获取数据时发生错误，请重试!!!");
+                    console.log(res);
+                }
+            });
+        });
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.open({
+                type: 1,
+                title: '流程历史',
+                closeBtn: 2,
+                area: ['800px', '400px'],
+                anim: 1,
+                shadeClose: true,
+                content: $('#taskDetail')
+            });
+        });
+    }
+
+    function dealwith(e) {
+        var jon = {};
+        jon['token'] = getCookie('token');
+        $.ajax({
+            url: "/getLogo",
+            type: "POST",
+            data: {"jon":JSON.stringify(jon)},
+            success: function (user) {
+                debugger;
+                console.log(user);
+                var jsonUser = JSON.parse(user);
+                var obj = eval("(" + jsonUser + ")");
+                var currName =obj.name;
+                var row = e.parentNode.parentNode.rowIndex;
+                var id = $("#articleGrid tr:eq(" + (row - 1) + ") td:eq(0)").html();
+                //最后一步审批的审批人应该是管理员界面当前用户
+                var dealperson = currName;
+                var dealtime = getFormatDate(new Date());
+                var creatername = $("#articleGrid tr:eq(" + (row - 1) + ") td:eq(2)").html();
+                $('input[name="idtext"]').val(id);
+                $('input[name="dealperson"]').val(dealperson);
+                $('input[name="dealtime"]').val(dealtime);
+                $('input[name="creatername"]').val(creatername);
+
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.open({
+                        type: 1,
+                        title: '查看课题',
+                        closeBtn: 2,
+                        area: ['400px', '350px'],
+                        anim: 1,
+                        shadeClose: true,
+                        content: $('#dealArticleTask')
+                    });
+                });
+
+            }
+        });
+    }
+
+    function submitArticleTask() {
+        debugger;
+        var jon = {};
+        jon['id'] = $('input[name="idtext"]').val();
+        jon['currmessage'] = $('input[name="currmessage"]').val();
+        jon['dealtime'] = $('input[name="dealtime"]').val();
+        jon['dealperson'] = $('input[name="dealperson"]').val();
+        jon['dealmethod'] = $("option[name='select']:selected").val();
+        jon['creatername'] = $('input[name="creatername"]').val();
+        jon['token'] = getCookie('token');
+
+        $.ajax({
+            url: "/adminExamineArticleTask",
+            type: "POST",
+            data: {"jon": JSON.stringify(jon)},
+            success: function (res) {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('审批成功!!!', {
+                        icon: 1
+                    });
+                });
+                setTimeout(location.reload(),1000);
+            },
+            error: function () {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('流程出现异常，请联系管理员!!!', {
+                        icon: 2
+                    });
+                });
+            }
+        })
+
+    }
+
+</script>
+</html>

@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.client.eurekaclient.mapper.ArticleMapper">
+  <resultMap id="BaseResultMap" type="com.client.eurekaclient.pojo.Article">
+    <id column="uuid" jdbcType="VARCHAR" property="uuid" />
+    <result column="articlename" jdbcType="VARCHAR" property="articlename" />
+    <result column="articlevalue" jdbcType="VARCHAR" property="articlevalue" />
+    <result column="articleauth" jdbcType="VARCHAR" property="articleauth" />
+    <result column="articlerecordid" jdbcType="VARCHAR" property="articlerecordid" />
+    <result column="articlecreatetime" jdbcType="VARCHAR" property="articlecreatetime" />
+    <result column="articleedittime" jdbcType="VARCHAR" property="articleedittime" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="articlehandler" jdbcType="VARCHAR" property="articlehandler" />
+    <result column="subjectid" jdbcType="VARCHAR" property="subjectid" />
+    <result column="creater" jdbcType="VARCHAR" property="creater" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    uuid, articlename, articlevalue, articleauth, articlerecordid, articlecreatetime, 
+    articleedittime, status, articlehandler, subjectid
+  </sql>
+  <select id="selectByExample" parameterType="com.client.eurekaclient.pojo.ArticleExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from article
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from article
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" keyColumn="uuid" keyProperty="uuid" parameterType="com.client.eurekaclient.pojo.Article" useGeneratedKeys="true">
+    insert into article (articlename, articlevalue, articleauth, 
+      articlerecordid, articlecreatetime, articleedittime, 
+      status, articlehandler, subjectid
+      )
+    values (#{articlename,jdbcType=VARCHAR}, #{articlevalue,jdbcType=VARCHAR}, #{articleauth,jdbcType=VARCHAR}, 
+      #{articlerecordid,jdbcType=VARCHAR}, #{articlecreatetime,jdbcType=VARCHAR}, #{articleedittime,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{articlehandler,jdbcType=VARCHAR}, #{subjectid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="uuid" keyProperty="uuid" parameterType="com.client.eurekaclient.pojo.Article" useGeneratedKeys="true">
+    insert into article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="articlename != null">
+        articlename,
+      </if>
+      <if test="articlevalue != null">
+        articlevalue,
+      </if>
+      <if test="articleauth != null">
+        articleauth,
+      </if>
+      <if test="articlerecordid != null">
+        articlerecordid,
+      </if>
+      <if test="articlecreatetime != null">
+        articlecreatetime,
+      </if>
+      <if test="articleedittime != null">
+        articleedittime,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="articlehandler != null">
+        articlehandler,
+      </if>
+      <if test="subjectid != null">
+        subjectid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="articlename != null">
+        #{articlename,jdbcType=VARCHAR},
+      </if>
+      <if test="articlevalue != null">
+        #{articlevalue,jdbcType=VARCHAR},
+      </if>
+      <if test="articleauth != null">
+        #{articleauth,jdbcType=VARCHAR},
+      </if>
+      <if test="articlerecordid != null">
+        #{articlerecordid,jdbcType=VARCHAR},
+      </if>
+      <if test="articlecreatetime != null">
+        #{articlecreatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="articleedittime != null">
+        #{articleedittime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="articlehandler != null">
+        #{articlehandler,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectid != null">
+        #{subjectid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.client.eurekaclient.pojo.Article">
+    update article
+    <set>
+      <if test="articlename != null">
+        articlename = #{articlename,jdbcType=VARCHAR},
+      </if>
+      <if test="articlevalue != null">
+        articlevalue = #{articlevalue,jdbcType=VARCHAR},
+      </if>
+      <if test="articleauth != null">
+        articleauth = #{articleauth,jdbcType=VARCHAR},
+      </if>
+      <if test="articlerecordid != null">
+        articlerecordid = #{articlerecordid,jdbcType=VARCHAR},
+      </if>
+      <if test="articlecreatetime != null">
+        articlecreatetime = #{articlecreatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="articleedittime != null">
+        articleedittime = #{articleedittime,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="articlehandler != null">
+        articlehandler = #{articlehandler,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectid != null">
+        subjectid = #{subjectid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.client.eurekaclient.pojo.Article">
+    update article
+    set articlename = #{articlename,jdbcType=VARCHAR},
+      articlevalue = #{articlevalue,jdbcType=VARCHAR},
+      articleauth = #{articleauth,jdbcType=VARCHAR},
+      articlerecordid = #{articlerecordid,jdbcType=VARCHAR},
+      articlecreatetime = #{articlecreatetime,jdbcType=VARCHAR},
+      articleedittime = #{articleedittime,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      articlehandler = #{articlehandler,jdbcType=VARCHAR},
+      subjectid = #{subjectid,jdbcType=VARCHAR}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <select id="getAll" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select * from article limit #{start,jdbcType=VARCHAR},#{limit,jdbcType=VARCHAR}
+  </select>
+  <select id="getArticleByChoose" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from article where uuid = (select articleid from ChooseArticle where stuid = #{uuid,jdbcType=VARCHAR})
+  </select>
+  <select id="searchArticle" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select * from article where 1=1
+    <if test="status != ''">
+      and status = #{status,jdbcType=VARCHAR}
+    </if>
+    <if test="articleauth != ''">
+      and articleauth like CONCAT(CONCAT('%',#{articleauth,jdbcType=VARCHAR}),'%')
+    </if>
+    limit #{start,jdbcType=VARCHAR},#{limit,jdbcType=VARCHAR}
+  </select>
+  <delete id="delArticleByChoose" parameterType="java.lang.String">
+    delete from choosearticle where stuid = #{stuid,jdbcType=VARCHAR} and articleid = #{artid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="chooseArticle" parameterType="java.lang.String">
+    insert into choosearticle (stuid,articleid) values (#{stuid,jdbcType=VARCHAR},#{artid,jdbcType=VARCHAR})
+  </insert>
+  <select id="getArticleCount" resultType="java.lang.Integer">
+    select count(*) from article
+  </select>
+  <select id="getArticleCount2" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(*) from article where 1=1
+    <if test="status != ''">
+      and status = #{status,jdbcType=VARCHAR}
+    </if>
+    <if test="articleauth != ''">
+      and articleauth like CONCAT(CONCAT('%',#{articleauth,jdbcType=VARCHAR}),'%')
+    </if>
+  </select>
+  <update id="updateArticle" parameterType="java.lang.String">
+    update article set articlename = #{articlename,jdbcType=VARCHAR},articlevalue = #{articlevalue,jdbcType=VARCHAR},articleedittime=#{edittime,jdbcType=VARCHAR} where uuid = #{id,jdbcType=VARCHAR}
+  </update>
+  <delete id="delArticle" parameterType="java.lang.String">
+    delete from article where uuid = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="createStuArticle" parameterType="java.lang.String">
+    insert into article
+    (uuid,articlename,articlevalue,articleauth,articlerecordid,articlecreatetime,status,articlehandler,creater)
+    select
+    #{articleid,jdbcType=VARCHAR},#{articlename,jdbcType=VARCHAR},
+    #{articlevalue,jdbcType=VARCHAR},#{articleauth,jdbcType=VARCHAR},
+    #{artrecordid,jdbcType=VARCHAR},#{articlecreatetime,jdbcType=VARCHAR},0,
+    #{articleauth,jdbcType=VARCHAR},name
+    from user where uuid = #{creater,jdbcType=VARCHAR}
+  </insert>
+  <select id="getMyArticleCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(*) from article where creater = (select name from user where uuid = #{uuid,jdbcType=VARCHAR})
+  </select>
+  <select id="getMyArticle" resultMap="BaseResultMap">
+    select * from article where creater =(select name from user where uuid = #{uuid,jdbcType=VARCHAR})
+    limit #{start,jdbcType=VARCHAR},#{limit,jdbcType=VARCHAR}
+  </select>
+  <select id="getMyHandlerArticleCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(*) from article where articlehandler = (select name from user where uuid = #{uuid,jdbcType=VARCHAR})
+  </select>
+  <select id="getMyHandlerArticle" resultMap="BaseResultMap">
+    select * from article where articlehandler = (select name from user where uuid = #{uuid,jdbcType=VARCHAR})
+    or creater = (select name from user where uuid = #{uuid,jdbcType=VARCHAR})
+    limit #{start,jdbcType=VARCHAR},#{limit,jdbcType=VARCHAR}
+  </select>
+  <update id="TeaExamineArticleTask" parameterType="java.lang.String">
+    update article set status = #{status,jdbcType=VARCHAR},articlehandler = #{articlehandler,jdbcType=VARCHAR} where uuid = #{id,jdbcType=VARCHAR}
+  </update>
+  <insert id="teaSubmitArticle" parameterType="java.lang.String">
+    insert into article
+    (uuid,articlename,articlevalue,articleauth,articlerecordid,articlecreatetime,status,articlehandler,creater)
+    select
+    #{articleid,jdbcType=VARCHAR},#{articlename,jdbcType=VARCHAR},
+    #{articlevalue,jdbcType=VARCHAR},#{articleauth,jdbcType=VARCHAR},
+    #{artrecordid,jdbcType=VARCHAR},#{articlecreatetime,jdbcType=VARCHAR},0,
+    '管理员',name
+    from user where uuid = #{creater,jdbcType=VARCHAR}
+  </insert>
+</mapper>

@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>西安文理学院毕业设计管理系统</title>
+<link href="css/login.css" rel="stylesheet" rev="stylesheet" type="text/css" media="all" />
+  <link rel="stylesheet" href="../layui-v2.3.0/layui/css/layui.css" />
+<script type="text/javascript" src="js/jQuery1.7.js"></script>
+<!--<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>-->
+<script type="text/javascript" src="js/jquery1.42.min.js"></script>
+<script type="text/javascript" src="js/jquery.SuperSlide.js"></script>
+<script type="text/javascript" src="js/Validform_v5.3.2_min.js"></script>
+  <script type="text/javascript"src="../layui-v2.3.0/layui/layui.js"></script>
+  <script src="js/jquery.cookie.js"></script>
+  <script src="../js/application.js"></script>
+
+
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript">
+$(function(){
+/*学生登录信息验证*/
+$("#stu_username_hide").focus(function(){
+ var username = $(this).val();
+ if(username=='输入学号'){
+ $(this).val('');
+ }
+});
+$("#stu_username_hide").focusout(function(){
+ var username = $(this).val();
+ if(username==''){
+ $(this).val('输入学号');
+ }
+});
+$("#stu_password_hide").focus(function(){
+ var username = $(this).val();
+ if(username=='输入密码'){
+ $(this).val('');
+ }
+});
+$("#stu_password_hide").focusout(function(){
+ var username = $(this).val();
+ if(username==''){
+ $(this).val('输入密码');
+ }
+});
+$("#stu_code_hide").focus(function(){
+ var username = $(this).val();
+ if(username=='输入验证码'){
+ $(this).val('');
+ }
+});
+$("#stu_code_hide").focusout(function(){
+ var username = $(this).val();
+ if(username==''){
+ $(this).val('输入验证码');
+ }
+});
+$(".stu_login_error").Validform({
+	tiptype:function(msg,o,cssctl){
+		var objtip=$(".stu_error_box");
+		cssctl(objtip,o.type);
+		objtip.text(msg);
+	},
+	ajaxPost:true
+});
+
+$(".sec_login_error").Validform({
+	tiptype:function(msg,o,cssctl){
+		var objtip=$(".sec_error_box");
+		cssctl(objtip,o.type);
+		objtip.text(msg);
+	},
+	ajaxPost:true
+});
+});
+</script>
+
+  <style type="text/css">　　
+  .xiaomi{
+    font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
+  }
+  .vintage1{
+    background: #EEE url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAAHklEQVQImWNkYGBgYGD4//8/A5wF5SBYyAr+//8PAPOCFO0Q2zq7AAAAAElFTkSuQmCC) repeat;
+    text-shadow: 5px -5px black, 4px -4px white;
+    font-weight: bold;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text }
+
+  .code
+  {
+    background-image:url(code.jpg);
+    font-family:Arial;
+    font-style:italic;
+    color:Red;
+    border:0;
+    padding:2px 3px;
+    letter-spacing:3px;
+    font-weight:bolder;
+  }
+  .unchanged
+  {
+    border:0;
+  }
+
+  </style>　
+</head>
+<body onLoad="createCode()">
+<body>
+<div id="tab">
+  <h1 class="vintage1">西安文理毕业（论文）管理系统</h1>
+  <div class="tab_box">
+    <!-- 学生登录开始 -->
+    <div>
+      <div class="stu_error_box"></div>
+      <form class="stu_login_error">
+        <div id="username">
+          <label>学&nbsp;&nbsp;&nbsp;号：</label>
+          <input type="text" id="name" name="username" value="输入学号" nullmsg="学号不能为空！" sucmsg="学号验证通过！"/>
+          <!--ajaxurl="demo/valid.jsp"-->
+        </div>
+        <div id="password">
+          <label>密&nbsp;&nbsp;&nbsp;码：</label>
+          <input type="password" id="pass" name="password" value="输入密码" nullmsg="密码不能为空！" sucmsg="密码验证通过！"/>
+        </div>
+        <div id="code">
+          <label>验证码：</label>
+          <input type="text" id="code" name="code"  value="输入验证码" nullmsg="验证码不能为空！" datatype="*4-4" errormsg="验证码有4位数！" sucmsg="验证码验证通过！"/>
+          <input type="text" onClick="createCode()" readonly="readonly" id="checkCode" class="unchanged" style="width: 80px;cursor:pointer"  /><br />
+          <!--<img src="images/captcha.jpg" title="点击更换" alt="验证码占位图"/>-->
+        </div>
+        <div id="remember">
+          <input type="radio" name="role" value="1" checked="checked">学生
+          &nbsp;
+          <input type="radio" name="role" value="2">老师
+          &nbsp;
+          <input type="radio" name="role" value="0">管理员
+        </div>
+        <div>
+          <button type="button" id="loginBtn" onclick="aalogin()">登录</button>
+        </div>
+      </form>
+    </div>
+   <!-- 学生登录结束-->
+
+  </div>
+</div>
+<div class="bottom">©2019 <a href="javascript:;" target="_blank">关于我</a> <span>我的站点:</span>39.105.197.150 <a href="39.105.197.150:888" target="_blank" title="高阳">站长之家</a> - Collect from <a href="39.105.197.150:888" title="" target="_blank"></a><img width="13" height="16" src="images/copy_rignt_24.png" /></div>
+<div class="screenbg">
+  <ul>
+    <li><a href="javascript:;"><img src="images/0.jpg"></a></li>
+   <li><a href="javascript:;"><img src="images/1.jpg"></a></li>
+    <li><a href="javascript:;"><img src="images/2.jpg"></a></li>
+  </ul>
+</div>
+</body>
+
+    <script>
+        /***********************************************/
+        var code ; //在全局 定义验证码
+        function createCode()
+        {
+            code = "";
+            var codeLength = 6;//验证码的长度
+            var checkCode = document.getElementById("checkCode");
+            var selectChar = new Array(0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');//所有候选组成验证码的字符，当然也可以用中文的
+            for(var i=0;i<codeLength;i++)
+            {
+                var charIndex = Math.floor(Math.random()*36);
+                code +=selectChar[charIndex];
+            }
+            if(checkCode)
+            {
+                checkCode.className="code";
+                checkCode.value = code;
+                checkCode.blur();
+            }
+        }
+        function validate ()   {
+            debugger;
+            var inputCode = $('input[name="code"]').val();
+            if(inputCode.length <=0)
+            {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('请输入验证码!!!',{
+                        icon:2
+                    });
+                });
+                return false;
+            }
+            else if(inputCode.toUpperCase() != code )
+            {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('验证码输入错误!!!',{
+                        icon:2
+                    });
+                });
+                createCode();//刷新验证码
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+      /***********************************************/
+
+
+    function aalogin() {
+        if(!validate()){
+            return;
+        }else{
+
+        var jon={};
+        jon['name']=$("#name").val();
+        jon['password']=$("#pass").val();
+        jon['role']=$('input[name="role"]:checked').val();
+        //jon['role']=$('input:radio:checked').val();
+        if(jon['name']==""||jon['name']==null||jon['password']==""||jon['password']==null) {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.msg('用户名密码不能为空!!!',{
+                    icon:0
+                });
+            });
+        }else if(jon['role']==""||jon['role']==null){
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.msg('请勾选用户身份!!!',{
+                    icon:0
+                });
+            });
+        }else{
+            $.ajax({
+                type:"POST",
+                url:"/login",
+                data:{"jon":JSON.stringify(jon)},
+                success:function (result) {
+                    res=JSON.parse(result);
+                    layui.use('layer', function(){
+                        var layer = layui.layer;
+                        layer.msg(res.msg,{
+                            icon:2
+                        });
+                    });
+                    if(res.token!=null){
+                        setCookie("token",res.token,{ expires: 7, path: '/' });
+
+                        if(jon['role']==1){
+                            window.location.href="../student/main.html?token="+getCookie("token");
+                        }else if(jon['role']==2){
+                            window.location.href="../teacher/main.html?token="+getCookie("token");
+                        }else{
+                            window.location.href="../admin/main.html?token="+getCookie("token");
+                        }
+                        //window.location.href="../student/main.html?token="+getCookie("token");
+                    }
+                }
+            });
+        }
+        }
+    }
+</script>
+</html>

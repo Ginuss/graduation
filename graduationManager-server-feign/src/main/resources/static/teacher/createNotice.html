@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<link rel="stylesheet" type="text/css" href="css/WdatePicker.css" />
+<link rel="stylesheet" type="text/css" href="css/skin_/form.css" />
+    <link rel="stylesheet" type="text/css" href="../layui-v2.3.0/layui/css/layui.css"/>
+<link href="umeditor/themes/default/_css/umeditor.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript" src="js/jquery.select.js"></script>
+<script type="text/javascript" src="js/WdatePicker.js"></script>
+    <script type="text/javascript" src="../js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../js/application.js"></script>
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <script type="text/javascript" src="../layui-v2.3.0/layui/layui.js"></script>
+<script type="text/javascript">
+window.UMEDITOR_HOME_URL = 'umeditor/';  // 请换成绝对路径
+</script>
+<script type="text/javascript" src="js/umeditor.config.js"></script>
+<script type="text/javascript" src="js/editor_api.js"></script>
+<script type="text/javascript" src="umeditor/lang/zh-cn/zh-cn.js"></script>
+<title>基础信息</title>
+</head>
+
+<body>
+<div id="container">
+	<div id="hd">
+    </div>
+    <div id="bd">
+    	<div id="main">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>基本信息</legend><br>
+            <div class="subfild-content base-info">
+            	<div class="kv-item ue-clear">
+                	<label><span class="impInfo">*</span>公告名称</label>
+                	<div class="kv-item-content">
+                    	<input type="text" name="noticename" placeholder="公告名称" />
+                    </div>
+                    <span class="kv-item-tip">字数限制在20个字符</span>
+                </div>
+
+                <div class="kv-item ue-clear">
+                    <label><span class="impInfo">*</span>公告作者</label>
+                    <div class="kv-item-content">
+                        <input type="text" name="noticeauth" placeholder="公告作者" readonly/>
+                    </div>
+                    <span class="kv-item-tip">您只能上传本人指导的课题</span>
+                </div>
+
+                
+                <!--<div class="kv-item ue-clear">
+                	<label>所在栏目</label>
+                	<div class="kv-item-content">
+                    	<select>
+                        	<option>新闻资讯</option>
+                            <option>新闻资讯</option>
+                            <option>新闻资讯</option>
+                        </select>
+                    </div>
+                    <span class="kv-item-tip success">成功信息</span>
+                </div>-->
+                
+
+
+            </div>
+            </fieldset>
+
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>公告内容</legend><br>
+            
+            <div class="subfild-content remarkes-info">
+            	<div class="kv-item ue-clear">
+                	<label><span class="impInfo">*</span>公告内容</label>
+                	<div class="kv-item-content">
+                    	<textarea placeholder="公告内容" id="content" style="width:800px;height:240px;"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <input class="button" type="button" onclick="submit()" value="确认提交" />
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript">
+    function getFormatDate() {
+        var date = new Date();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentDate = date.getFullYear() + "-" + month + "-" + strDate  + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        return currentDate;
+    }
+
+	$('select').select();
+	showRemind('input[type=text],textarea','color5');
+	UM.getEditor('content');
+
+    var jon = {};
+    jon['token'] = getCookie("token");
+    $.ajax({
+        url: "/getLogo",
+        type: "POST",
+        data: {"jon":JSON.stringify(jon)},
+        success: function (user) {
+            debugger;
+            console.log(user);
+            var jsonUser = JSON.parse(user);
+            var obj = eval("(" + jsonUser + ")");
+            var currName =obj.name;
+            $('input[name="noticeauth"]').val(currName);
+        }
+    });
+	
+    function submit() {
+        var jon = {};
+        jon['noticename'] = $('input[name="noticename"]').val();
+        jon['noticeauth'] = $('input[name="noticeauth"]').val();
+        jon['noticevalue'] = $('p').text();
+        $.ajax({
+            url: "/addNotice",
+            type: "POST",
+            data: {"jon": JSON.stringify(jon)},
+            success: function (res) {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('发布公告成功!!!', {
+                        icon: 0
+                    });
+                });
+            },
+            error: function (res) {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('发布公告失败，请重试!!!', {
+                        icon: 2
+                    });
+                });
+            }
+        });
+    }
+</script>
+</html>

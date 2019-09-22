@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/WdatePicker.css" />
+    <link rel="stylesheet" type="text/css" href="css/skin_/form.css" />
+    <link rel="stylesheet" type="text/css" href="../layui-v2.3.0/layui/css/layui.css"/>
+    <link href="umeditor/themes/default/_css/umeditor.css" type="text/css" rel="stylesheet">
+
+    <title></title>
+</head>
+
+<body>
+<div id = "container">
+    <div id="hd"></div>
+    <div id="bd">
+        <div id="main">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>课题基本信息</legend>
+                <table class="layui-table">
+                    <input type="text" name="idtext" style="display: none"/>
+                    <tr>
+                        <td>课程名称</td>
+                        <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="nametext" readonly/></td>
+                    </tr>
+                    <tr>
+                        <td>课题上传时间</td>
+                        <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="timetext" readonly/></td>
+                    </tr>
+                    <tr>
+                        <td>指导老师</td>
+                        <td><input style="border: 0px;outline:none;cursor: pointer;" type='text' name="authtext" readonly/></td>
+                    </tr>
+                </table>
+            </fieldset>
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>开题报告详情</legend><br>
+                <blockquote class="layui-elem-quote layui-quote-nm" style="color: red;" id="blockname">66</blockquote>
+                <form id="form-report" action="reportUpload" enctype="multipart/form-data" method="post">
+                <div class="subfild-content remarkes-info">
+                    <div class="kv-item ue-clear">
+                        <label><span class="impInfo">*</span>开题报告</label>
+                        <div class="kv-item-content">
+                            <textarea placeholder="开题报告" id="content" name="reportValue" style="width:800px;height:240px;"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="kv-item ue-clear">
+                    <label><span class="impInfo">*</span>附件上传</label>
+                    <div class="kv-item-content file">
+                        <span class="text"></span>
+                        <input type="file" name="reportFile"/>
+                        <input type="button" class="button normal long2" value="浏览.." />
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <input class="button" type="button" onclick="submitReport()" value="确认提交" />
+                </div>
+            </form>
+            </fieldset>
+        </div>
+    </div>
+</div>
+</div>
+
+</body>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript" src="js/jquery.select.js"></script>
+<script type="text/javascript" src="js/WdatePicker.js"></script>
+<script type="text/javascript" src="../js/jquery.cookie.js"></script>
+<script type="text/javascript" src="../js/application.js"></script>
+<script type="text/javascript" src="../js/vue.js"></script>
+<script type="text/javascript" src="../layui-v2.3.0/layui/layui.js"></script>
+<script type="text/javascript">
+    window.UMEDITOR_HOME_URL = 'umeditor/';  // 请换成绝对路径
+</script>
+<script type="text/javascript" src="js/umeditor.config.js"></script>
+<script type="text/javascript" src="js/editor_api.js"></script>
+<script type="text/javascript" src="umeditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+
+    //获取url地址中参数（不乱码写法）===============================================
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r != null) return decodeURI(r[2]);
+        return null;
+    }
+
+    function getFormatDate() {
+        var date = new Date();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentDate = date.getFullYear() + "-" + month + "-" + strDate  + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        return currentDate;
+    }
+    showRemind('input[type=text],textarea','color5');
+    UM.getEditor('content');
+
+    $.ajax({
+        url: "/getArticleByChoose",
+        type: "POST",
+        data: {"token": getCookie("token")},
+        success: function (res) {
+            console.log(res);
+            if(res=='[]'){
+                $('input[name="idtext"]').val('');
+                $('input[name="nametext"]').val('未选题');
+                $('input[name="timetext"]').val('未选题');
+                $('input[name="authtext"]').val('未选题');
+            }else{
+                var art = JSON.parse(res);
+                var id = art[0].uuid;
+                var articlename = art[0].articlename;
+                var articlecreatetime = art[0].articlecreatetime;
+                var articleauth = art[0].articleauth;
+                $('input[name="idtext"]').val(id);
+                $('input[name="nametext"]').val(articlename);
+                $('input[name="timetext"]').val(articlecreatetime);
+                $('input[name="authtext"]').val(articleauth);
+                $('#blockname').text("请选题学生完成《"+ articlename +"》的开题报告，并提交指导老师进行审批!!!");
+            }
+        },
+        error: function (res) {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.msg('获取数据失败，请重试!!!', {
+                    icon: 2
+                });
+            });
+        }
+    });
+
+    function submitReport() {
+        debugger;
+        var jon = {};
+        jon['token'] = getCookie('token');
+        $.ajax({
+            url: "/getMyReportCount",
+            type: "POST",
+            data: {"jon": JSON.stringify(jon)},
+            success: function (res) {
+                debugger;
+                if(res == 0){
+                    if(UM.getEditor('content').getContent()==""){
+                        layui.use('layer', function () {
+                            var layer = layui.layer;
+                            layer.msg('请完善开题报告内容!!!', {
+                                icon: 2
+                            });
+                        });
+                    }else{
+                        $('#form-report').submit();
+                        var jon = {};
+                        jon['token'] = getCookie('token');
+                        jon['repname'] = $('input[name="nametext"]').val();
+                        jon['repvalue'] = UM.getEditor('content').getContent();
+                        jon['repauth'] = $('input[name="authtext"]').val();
+                        jon['repcreatetime'] = getFormatDate(new Date());
+                        jon['articleid'] = $('input[name="idtext"]').val();
+                        var localaddr = $('span[class="text"]').text();
+                        var addr = localaddr.substring(localaddr.lastIndexOf("\\"));
+                        jon['reportaddr'] = addr;
+                        $.ajax({
+                            url: "/submitReport",
+                            type: "POST",
+                            data: {"jon": JSON.stringify(jon)},
+                            success: function () {
+
+                            },
+                            error: function () {
+                                layui.use('layer', function () {
+                                    var layer = layui.layer;
+                                    layer.msg('获取数据失败，请重试!!!', {
+                                        icon: 2
+                                    });
+                                });
+                            }
+                        });
+                    }
+
+                } else {
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        layer.msg('您已经提交过开题报告，请不要重复提交!!!', {
+                            icon: 2
+                        });
+                    });
+                }
+
+            },
+            error: function () {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('获取数据失败，请重试!!!', {
+                        icon: 2
+                    });
+                });
+            }
+        });
+    }
+
+
+
+</script>
+</html>

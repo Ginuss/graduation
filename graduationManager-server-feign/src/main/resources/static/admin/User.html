@@ -1,0 +1,400 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/WdatePicker.css"/>
+    <link rel="stylesheet" type="text/css" href="css/skin_/table.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery.grid.css"/>
+    <link rel="stylesheet" type="text/css" href="../layui-v2.3.0/layui/css/layui.css"/>
+    <script type="text/javascript" src="../layui-v2.3.0/layui/layui.js"></script>
+
+    <title></title>
+</head>
+
+<body>
+<div id="excel" style="display: none">
+
+    <form id="form-excel" action="excelUpload" enctype="multipart/form-data" method="post">
+        <br>
+        <div class="kv-item ue-clear">
+            <label><span class="impInfo"></span>表格上传</label>
+            <div class="kv-item-content file">
+                <span class="text"></span>
+                <input type="file" name="excelFile"/>
+                <input type="button" class="button normal long2" value="浏览.." />
+            </div>
+        </div>
+        <br>
+        <div style="text-align: center">
+            <p>请严格按照官方指定Excel模板格式上传附件</p>
+            <p style="color: red">由于各浏览器兼容问题，限制源文件以桌面为根路径！</p>
+            <p>如有疑问，请先下载<a onclick="down()" style="color: red">西安文理毕业管理系统信息录入Excel模板</a></p>
+        </div>
+        <br>
+        <div class="buttons"  style="text-align: center">
+            <input class="button"  type="button" onclick="poi()" value="导入" />
+        </div>
+    </form>
+</div>
+<div id="setRole" style="display: none">
+    <input style="display: none" name="id">
+    <form action="">
+    <div style="text-align: center">
+            <select>
+                <option name="select">管理员</option>
+                <option name="select">学生</option>
+                <option name="select">老师</option>
+            </select>
+    </div>
+        <br><br>
+    </form>
+    <div style="text-align: center">
+        <input type="button" class="layui-btn layui-btn-primary" value="确认" onclick="role()"/>
+    </div>
+</div>
+<div id="addUser" style="display: none">
+    <table class="layui-table">
+
+        <input type="text" name="idtext" style="display: none"/>
+        <tr>
+            <td>姓名</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" class="layui-input" lay-verify="number"  type='text' name="name" /></td>
+        </tr>
+        <tr>
+            <td>账号</td>
+            <td><input style="border: 0px;outline:none;cursor: pointer;" type='text'  class="layui-input" name="loginname" lay-verify="number" /></td>
+        </tr>
+        <tr>
+            <td>权限</td>
+            <td>
+                <form action="">
+                <select>
+                    <option name="select">学生</option>
+                    <option name="select">老师</option>
+                    <option name="select">管理员</option>
+                </select>
+                </form>
+            </td>
+        </tr>
+
+    </table>
+    <div style="text-align: center">
+        <input type="button" class="layui-btn layui-btn-primary" value="确认" onclick="submit()"/>
+    </div>
+</div>
+<div id = "container">
+<div id="hd"></div>
+<div id="bd">
+    <div id="main">
+        <div class="search-box ue-clear">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>学生列表</legend>
+                <br>
+
+                <div class="kv-item ue-clear">
+
+                    <div class="search-button">
+                        <input class="button" onclick="addUser()" type="button" value="添加用户"/>
+                        <input class="button" onclick="excel()" type="button" value="批量添加"/>
+                    </div>
+                </div>
+            </fieldset>
+
+
+
+            <div class="userTable" id="user">
+
+                <table id="studenttable" class="layui-table">
+                    <colgroup>
+                        <col width="50">
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>学生姓名</th>
+                        <th>联系方式</th>
+                        <th>用户权限</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="userGrid" class="tbody">
+                    <tr v-for="pre in preview" onclick="click(this)">
+                        <td id="id">{{ pre.uuid }}</td>
+                        <td>{{ pre.name }}</td>
+                        <td>{{ pre.email }}</td>
+                        <td>{{ pre.role }}</td>
+                        <td><a onclick="setRole(this)">重新授权</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div id="pTable" style="width: 1200px;">
+                    <div id="laypage">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+</body>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript" src="js/jquery.select.js"></script>
+<script type="text/javascript" src="js/core.js"></script>
+<script type="text/javascript" src="js/jquery.pagination.js"></script>
+<script type="text/javascript" src="js/jquery.grid.js"></script>
+<script type="text/javascript" src="js/WdatePicker.js"></script>
+<script type="text/javascript" src="../js/jquery.cookie.js"></script>
+<script type="text/javascript" src="../js/application.js"></script>
+<script type="text/javascript" src="../js/vue.js"></script>
+
+<script type="text/javascript">
+
+
+
+    var user = new Vue({
+        el: '#user',
+        data: {
+            preview: ""
+        }
+    });
+    layui.use('laypage', function () {
+        var laypage = layui.laypage;
+        $.ajax({
+            url:"/getUserCount",
+            type:"POST",
+            data:{},
+            success:function (res) {
+                debugger;
+                console.log(res);
+                laypage.render({
+                    elem: 'pTable'
+                    , count: res
+                    , limit: 5
+                    , jump: function (obj, first) {
+                        //obj包含了当前分页的所有参数，比如：
+                        //console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                        //  console.log(obj.limit); //得到每页显示的条数
+                        debugger;
+                        var jon={};
+                        jon['curr']=obj.curr;
+                        jon['limit']=obj.limit;
+
+                        $.ajax({
+                            url: "/getUser",
+                            type: "POST",
+                            data: {"jon": JSON.stringify(jon)},
+                            success: function (res) {
+                                debugger;
+                                var a = res.replace(/"role":"0"/g, "\"role\":\"管理员\"");
+                                var b = a.replace(/"role":"1"/g, "\"role\":\"学生\"");
+                                var c = b.replace(/"role":"2"/g, "\"role\":\"老师\"");
+                                user.preview = JSON.parse(c);
+                            }
+                        });
+                        //首次不执行
+                        if (1) {
+                            //do something
+                        }
+                    }
+                });
+            },
+            error:function (res) {
+                layer.msg("获取数据时发生错误，请重试!!!");
+                console.log(res);
+            }
+        });
+    });
+
+
+    
+    function addUser() {
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.open({
+                type: 1,
+                title: '添加用户',
+                closeBtn: 2,
+                area: ['500px', '360px'],
+                anim: 1,
+                shadeClose: true,
+                content: $('#addUser')
+            });
+            layui.use('form', function(){
+                var form = layui.form;
+                form.render();
+            });
+        });
+    }
+
+    function submit() {
+        debugger;
+        var jon = {};
+        jon['name'] = $('input[name="name"]').val();
+        jon['loginname'] = $('input[name="loginname"]').val();
+        //jon['role'] = $('option[name="select"]:selected').val();
+        var aa = $("option[name='select']:selected")[1].textContent;
+        if(aa=='学生'){
+            jon['role'] = 1;
+        }else if(aa=='老师'){
+            jon['role'] = 2;
+        }else{
+            jon['role'] = 0;
+        }
+        $.ajax({
+            url: "/addUser",
+            type: "POST",
+            data: {"jon": JSON.stringify(jon)},
+            success: function (res) {
+                debugger;
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('增加用户成功!!!', {
+                        icon: 0
+                    });
+                });
+                setTimeout("location.reload()",2000);
+            }
+        });
+    }
+
+    function setRole(e) {
+        var row = e.parentNode.parentNode.rowIndex;
+        var id = $("#userGrid tr:eq(" + (row - 1) + ") td:eq(0)").html();
+        $('input[name="id"]').val(id);
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.open({
+                type: 1,
+                title: '重新授权',
+                closeBtn: 2,
+                area: ['500px', '260px'],
+                anim: 1,
+                shadeClose: true,
+                content: $('#setRole')
+            });
+            layui.use('form', function(){
+                var form = layui.form;
+                form.render();
+            });
+
+        });
+
+    }
+    
+    function role(e) {
+        debugger;
+        var jon = {};
+        jon['id'] =  $('input[name="id"]').val();
+        var bb = $("option[name='select']:selected")[0].textContent;
+        if(bb=='学生'){
+            jon['role'] = 1;
+        }else if(bb=='老师'){
+            jon['role'] = 2;
+        }else{
+            jon['role'] = 0;
+        }
+        //jon['role'] = $("option[name='select']:selected")[1].textContent;
+        $.ajax({
+            url: "/setRole",
+            type: "POST",
+            data: {"jon": JSON.stringify(jon)},
+            success: function (res) {
+                debugger;
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('修改授权成功!!!', {
+                        icon: 0
+                    });
+                });
+                setTimeout("location.reload()",2000);
+            }
+        });
+    }
+
+    function excel(){
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.open({
+                type: 1,
+                title: '添加用户',
+                closeBtn: 2,
+                area: ['500px', '360px'],
+                anim: 1,
+                shadeClose: true,
+                content: $('#excel')
+            });
+        });
+    }
+
+    function down(){
+        debugger;
+        //===============================
+        var form=$("<form>");
+        form.attr("style","display:none");
+        form.attr("class","downExcelForm");
+        form.attr("target","");
+        form.attr("method","post");//提交方式为post
+        form.attr("action","/downloadExcel");//定义action
+        //=================================
+        var input = $("<input>");
+        input.attr("name","addr");
+        input.attr("id","addrtext");
+        input.attr("type","text");
+        input.attr("value","D:\\idea workspace\\graduationManager-server-feign\\src\\main\\resources\\templates\\西安文理信息录入模板.xlsx");
+        $("body").append(form);
+        $(".downExcelForm").append(input);
+        debugger;
+        form.submit();
+    }
+    
+    function poi() {
+        //$('#form-excel').submit();
+        var path = $('input[name="excelFile"]').val();
+        var jon = {};
+        jon['fileName'] = path.substring(path.lastIndexOf("\\")+1);
+        $.ajax({
+            url: "/importExcel",
+            type: "POST",
+            data: {"jon": JSON.stringify(jon)},
+            success: function (res) {
+                debugger;
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('导入信息成功!!!', {
+                        icon: 0
+                    });
+                });
+                setTimeout("location.reload()",2000);
+            },error:function () {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('导入失败，请务必严格按照模板格式导入!!!', {
+                        icon: 2
+                    });
+                });
+            }
+        });
+
+    }
+
+
+
+
+
+
+
+</script>
+</html>

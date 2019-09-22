@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.client.eurekaclient.mapper.TaskBookMapper">
+  <resultMap id="BaseResultMap" type="com.client.eurekaclient.pojo.TaskBook">
+    <id column="uuid" jdbcType="VARCHAR" property="uuid" />
+    <result column="taskname" jdbcType="VARCHAR" property="taskname" />
+    <result column="taskvalue" jdbcType="VARCHAR" property="taskvalue" />
+    <result column="taskauth" jdbcType="VARCHAR" property="taskauth" />
+    <result column="tasktime" jdbcType="VARCHAR" property="tasktime" />
+    <result column="taskhandler" jdbcType="VARCHAR" property="taskhandler" />
+    <result column="subjectid" jdbcType="VARCHAR" property="subjectid" />
+    <result column="articleid" jdbcType="VARCHAR" property="articleid" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    uuid, taskname, taskvalue, taskauth, tasktime, taskhandler, subjectid, articleid
+  </sql>
+  <select id="selectByExample" parameterType="com.client.eurekaclient.pojo.TaskBookExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from taskbook
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from taskbook
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from taskbook
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" keyColumn="uuid" keyProperty="uuid" parameterType="com.client.eurekaclient.pojo.TaskBook" useGeneratedKeys="true">
+    insert into taskbook (taskname, taskvalue, taskauth, 
+      tasktime, taskhandler, subjectid, 
+      articleid)
+    values (#{taskname,jdbcType=VARCHAR}, #{taskvalue,jdbcType=VARCHAR}, #{taskauth,jdbcType=VARCHAR}, 
+      #{tasktime,jdbcType=VARCHAR}, #{taskhandler,jdbcType=VARCHAR}, #{subjectid,jdbcType=VARCHAR}, 
+      #{articleid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="uuid" keyProperty="uuid" parameterType="com.client.eurekaclient.pojo.TaskBook" useGeneratedKeys="true">
+    insert into taskbook
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="taskname != null">
+        taskname,
+      </if>
+      <if test="taskvalue != null">
+        taskvalue,
+      </if>
+      <if test="taskauth != null">
+        taskauth,
+      </if>
+      <if test="tasktime != null">
+        tasktime,
+      </if>
+      <if test="taskhandler != null">
+        taskhandler,
+      </if>
+      <if test="subjectid != null">
+        subjectid,
+      </if>
+      <if test="articleid != null">
+        articleid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="taskname != null">
+        #{taskname,jdbcType=VARCHAR},
+      </if>
+      <if test="taskvalue != null">
+        #{taskvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="taskauth != null">
+        #{taskauth,jdbcType=VARCHAR},
+      </if>
+      <if test="tasktime != null">
+        #{tasktime,jdbcType=VARCHAR},
+      </if>
+      <if test="taskhandler != null">
+        #{taskhandler,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectid != null">
+        #{subjectid,jdbcType=VARCHAR},
+      </if>
+      <if test="articleid != null">
+        #{articleid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.client.eurekaclient.pojo.TaskBook">
+    update taskbook
+    <set>
+      <if test="taskname != null">
+        taskname = #{taskname,jdbcType=VARCHAR},
+      </if>
+      <if test="taskvalue != null">
+        taskvalue = #{taskvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="taskauth != null">
+        taskauth = #{taskauth,jdbcType=VARCHAR},
+      </if>
+      <if test="tasktime != null">
+        tasktime = #{tasktime,jdbcType=VARCHAR},
+      </if>
+      <if test="taskhandler != null">
+        taskhandler = #{taskhandler,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectid != null">
+        subjectid = #{subjectid,jdbcType=VARCHAR},
+      </if>
+      <if test="articleid != null">
+        articleid = #{articleid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.client.eurekaclient.pojo.TaskBook">
+    update taskbook
+    set taskname = #{taskname,jdbcType=VARCHAR},
+      taskvalue = #{taskvalue,jdbcType=VARCHAR},
+      taskauth = #{taskauth,jdbcType=VARCHAR},
+      tasktime = #{tasktime,jdbcType=VARCHAR},
+      taskhandler = #{taskhandler,jdbcType=VARCHAR},
+      subjectid = #{subjectid,jdbcType=VARCHAR},
+      articleid = #{articleid,jdbcType=VARCHAR}
+    where uuid = #{uuid,jdbcType=VARCHAR}
+  </update>
+  <select id="getTaskBook" parameterType="java.lang.String" resultType="java.lang.String">
+    select taskvalue from taskbook where articleid =
+    (select articleid from choosearticle where stuid = #{stuid,jdbcType=VARCHAR})
+  </select>
+  <insert id="submitTaskBook" parameterType="java.lang.String">
+    INSERT INTO taskbook (
+	uuid,
+	taskname,
+	taskvalue,
+	taskauth,
+	tasktime,
+	articleid
+    ) select #{taskid,jdbcType=VARCHAR},#{taskname,jdbcType=VARCHAR},
+            #{taskvalue,jdbcType=VARCHAR},#{taskauth,jdbcType=VARCHAR},
+            #{tasktime,jdbcType=VARCHAR},uuid
+            from article
+            where articlename = #{articlename,jdbcType=VARCHAR}
+
+
+  </insert>
+  <select id="queryTaskBook" parameterType="java.lang.String" resultType="java.lang.String">
+    select taskvalue from taskbook where articleid = (select uuid from article where articlename = #{artname,jdbcType=VARCHAR})
+  </select>
+</mapper>

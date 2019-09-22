@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<link rel="stylesheet" type="text/css" href="css/WdatePicker.css" />
+<link rel="stylesheet" type="text/css" href="css/skin_/form.css" />
+    <link rel="stylesheet" type="text/css" href="../layui-v2.3.0/layui/css/layui.css"/>
+<link href="umeditor/themes/default/_css/umeditor.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript" src="js/jquery.select.js"></script>
+<script type="text/javascript" src="js/WdatePicker.js"></script>
+    <script type="text/javascript" src="../js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../js/application.js"></script>
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <script type="text/javascript" src="../layui-v2.3.0/layui/layui.js"></script>
+<script type="text/javascript">
+window.UMEDITOR_HOME_URL = 'umeditor/';  // 请换成绝对路径
+</script>
+<script type="text/javascript" src="js/umeditor.config.js"></script>
+<script type="text/javascript" src="js/editor_api.js"></script>
+<script type="text/javascript" src="umeditor/lang/zh-cn/zh-cn.js"></script>
+<title>基础信息</title>
+</head>
+
+<body>
+<div id="container">
+	<div id="hd">
+    </div>
+    <div id="bd">
+    	<div id="main">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>基本信息</legend><br>
+            <div class="subfild-content base-info">
+            	<div class="kv-item ue-clear">
+                	<label><span class="impInfo">*</span>题目名称</label>
+                	<div class="kv-item-content">
+                    	<input type="text" name="articlename" placeholder="题目名称" />
+                    </div>
+                    <span class="kv-item-tip">字数限制在20个字符</span>
+                </div>
+                <div class="kv-item ue-clear">
+                    <label><span class="impInfo">*</span>指导老师</label>
+                    <div class="kv-item-content">
+                        <input type="text" name="articleauth" placeholder="指导老师" />
+                    </div>
+                    <span class="kv-item-tip">字数限制在6个字符</span>
+                </div>
+
+                
+                <!--<div class="kv-item ue-clear">
+                	<label>所在栏目</label>
+                	<div class="kv-item-content">
+                    	<select>
+                        	<option>新闻资讯</option>
+                            <option>新闻资讯</option>
+                            <option>新闻资讯</option>
+                        </select>
+                    </div>
+                    <span class="kv-item-tip success">成功信息</span>
+                </div>-->
+                
+
+
+            </div>
+            </fieldset>
+
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>课题详情</legend><br>
+            
+            <div class="subfild-content remarkes-info">
+            	<div class="kv-item ue-clear">
+                	<label><span class="impInfo">*</span>详细信息</label>
+                	<div class="kv-item-content">
+                    	<textarea placeholder="详细信息" id="content" style="width:800px;height:240px;"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <input class="button" type="button" onclick="submit()" value="确认提交" />
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript">
+	$('select').select();
+	showRemind('input[type=text],textarea','color5');
+	UM.getEditor('content');
+    function getFormatDate() {
+        var date = new Date();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentDate = date.getFullYear() + "-" + month + "-" + strDate  + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        return currentDate;
+    }
+	
+    function submit() {
+        var jon = {};
+        jon['articlename'] = $('input[name="articlename"]').val();
+        jon['articleauth'] = $('input[name="articleauth"]').val();
+        jon['articlecreatetime'] = getFormatDate(new Date());
+        jon['articlevalue'] = $('p').text();
+        jon['token'] = getCookie('token');
+        $.ajax({
+            url: "/addArticle",
+            type: "POST",
+            data: {"jon": JSON.stringify(jon)},
+            success: function (res) {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('添加课题成功!!!', {
+                        icon: 0
+                    });
+                });
+                setTimeout("location.reload()",2000);
+            },
+            error: function (res) {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('获取数据失败，请重试!!!', {
+                        icon: 2
+                    });
+                });
+            }
+        });
+    }
+</script>
+</html>

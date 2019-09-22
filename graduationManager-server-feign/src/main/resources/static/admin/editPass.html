@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/WdatePicker.css"/>
+    <link rel="stylesheet" type="text/css" href="css/skin_/table.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery.grid.css"/>
+    <link rel="stylesheet" type="text/css" href="../layui-v2.3.0/layui/css/layui.css"/>
+
+    <title></title>
+</head>
+
+<body>
+<div id = "container">
+    <div id="hd"></div>
+    <div id="bd">
+        <div id="main">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>修改密码</legend><br><br>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">当前密码</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="oldPass" placeholder="当前密码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">新密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" name="newPass" placeholder="新密码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">重复密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" name="newPass2" placeholder="重复密码" autocomplete="off" class="layui-input">
+                    </div><br><br>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" style="align-items: center" onclick="submit()">确认修改</button>
+                    </div>
+                </div>
+            </div>
+            </fieldset>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<script type="text/javascript" src="js/jquery.select.js"></script>
+<script type="text/javascript" src="js/core.js"></script>
+<script type="text/javascript" src="js/jquery.pagination.js"></script>
+<script type="text/javascript" src="js/jquery.grid.js"></script>
+<script type="text/javascript" src="js/WdatePicker.js"></script>
+<script type="text/javascript" src="../js/jquery.cookie.js"></script>
+<script type="text/javascript" src="../js/application.js"></script>
+<script type="text/javascript" src="../js/vue.js"></script>
+<script type="text/javascript" src="../layui-v2.3.0/layui/layui.js"></script>
+<script type="text/javascript">
+function submit() {
+    var oldPass = $('input[name="oldPass"]').val();
+    var newPass = $('input[name="newPass"]').val();
+    var newPass2 = $('input[name="newPass2"]').val();
+    if(newPass == newPass2){
+        var jon = {};
+        jon['token'] = getCookie('token');
+        jon['oldPass'] = oldPass;
+        jon['newPass'] = newPass;
+        $.ajax({
+            url: "/editPass",
+            type: "POST",
+            data: {"jon":JSON.stringify(jon)},
+            success: function (res) {
+                debugger;
+                if(res == 'success'){
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        layer.msg('修改密码成功,正在跳转至登录界面......', {
+                            icon: 0
+                        });
+                    });
+                    deletedCookie();
+                    setTimeout("parent.parent.location.href=\'../login/login.html\'",3000);
+
+
+                }else{
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        layer.msg('旧密码输入错误，请重试!!!', {
+                            icon: 2
+                        });
+                    });
+                }
+
+            },
+            error: function (res) {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('服务器繁忙，请重新再试!!!', {
+                        icon: 2
+                    });
+                });
+            }
+        });
+    }else{
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.msg('两次密码输入不一致，请重新输入!!!', {
+                icon: 2
+            });
+        });
+    }
+}
+
+</script>
+</html>
